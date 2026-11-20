@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#E3F0E1" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="MUE LA" />
+  <title>MUE LA · จัดการงบอาหารและต้นทุนต่อมื้อ</title>
+  <link id="muela-favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%23E3F0E1'/%3E%3Cg transform='translate(76 76) scale(3.6)'%3E%3Crect x='25' y='28' width='13' height='24' rx='4' fill='%237D8D39'/%3E%3Crect x='44' y='16' width='13' height='36' rx='4' fill='%235B6E2C'/%3E%3Crect x='63' y='8' width='13' height='44' rx='4' fill='%23FF5A22'/%3E%3Cpath d='M14 54H86C85 84 65 88 50 88C35 88 15 84 14 54Z' fill='none' stroke='%235B6E2C' stroke-width='8.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='37' y1='94' x2='63' y2='94' stroke='%237D8D39' stroke-width='7' stroke-linecap='round'/%3E%3Ccircle cx='64' cy='70' r='5.5' fill='%23FF5A22'/%3E%3C/g%3E%3C/svg%3E" />
+  <link id="muela-apple-icon" rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23E3F0E1'/%3E%3Cg transform='translate(76 76) scale(3.6)'%3E%3Crect x='25' y='28' width='13' height='24' rx='4' fill='%237D8D39'/%3E%3Crect x='44' y='16' width='13' height='36' rx='4' fill='%235B6E2C'/%3E%3Crect x='63' y='8' width='13' height='44' rx='4' fill='%23FF5A22'/%3E%3Cpath d='M14 54H86C85 84 65 88 50 88C35 88 15 84 14 54Z' fill='none' stroke='%235B6E2C' stroke-width='8.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='37' y1='94' x2='63' y2='94' stroke='%237D8D39' stroke-width='7' stroke-linecap='round'/%3E%3Ccircle cx='64' cy='70' r='5.5' fill='%23FF5A22'/%3E%3C/g%3E%3C/svg%3E" />
+  <link id="muela-manifest" rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22MUE%20LA%22%2C%22short_name%22%3A%22MUE%20LA%22%2C%22description%22%3A%22%E0%B8%88%E0%B8%B1%E0%B8%94%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%87%E0%B8%9A%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A1%E0%B8%B2%E0%B8%93%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%84%E0%B8%B3%E0%B8%99%E0%B8%A7%E0%B8%93%E0%B8%95%E0%B9%89%E0%B8%99%E0%B8%97%E0%B8%B8%E0%B8%99%E0%B8%A1%E0%B8%B7%E0%B9%89%E0%B8%AD%E0%B8%AD%E0%B8%B2%E0%B8%AB%E0%B8%B2%E0%B8%A3%22%2C%22display%22%3A%22standalone%22%2C%22orientation%22%3A%22portrait%22%2C%22background_color%22%3A%22%23E3F0E1%22%2C%22theme_color%22%3A%22%23E3F0E1%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%2520viewBox%3D'0%200%20512%20512'%253E%253Crect%2520width%3D'512'%2520height%3D'512'%2520fill%3D'%2523E3F0E1'%2F%253E%253Cg%2520transform%3D'translate(76%252076)%2520scale(3.6)'%253E%253Crect%2520x%3D'25'%2520y%3D'28'%2520width%3D'13'%2520height%3D'24'%2520rx%3D'4'%2520fill%3D'%25237D8D39'%2F%253E%253Crect%2520x%3D'44'%2520y%3D'16'%2520width%3D'13'%2520height%3D'36'%2520rx%3D'4'%2520fill%3D'%25235B6E2C'%2F%253E%253Crect%2520x%3D'63'%2520y%3D'8'%2520width%3D'13'%2520height%3D'44'%2520rx%3D'4'%2520fill%3D'%2523FF5A22'%2F%253E%253Cpath%2520d%3D'M14%252054H86C85%252084%252065%252088%252050%252088C35%252088%252015%252084%252014%252054Z'%2520fill%3D'none'%2520stroke%3D'%25235B6E2C'%2520stroke-width%3D'8.5'%2520stroke-linecap%3D'round'%2520stroke-linejoin%3D'round'%2F%253E%253Cline%2520x1%3D'37'%2520y1%3D'94'%2520x2%3D'63'%2520y2%3D'94'%2520stroke%3D'%25237D8D39'%2520stroke-width%3D'7'%2520stroke-linecap%3D'round'%2F%253E%253Ccircle%2520cx%3D'64'%2520cy%3D'70'%2520r%3D'5.5'%2520fill%3D'%2523FF5A22'%2F%253E%253C%2Fg%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D" />
+  <script>
+    // PWA Bootstrap: Capture Chrome Install Prompt + Build 192/512 PNG Data URI Icons + Register Service Worker
+    (function () {
+      window.__muelaDeferredPrompt = null;
+      window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault();
+        window.__muelaDeferredPrompt = e;
+        window.dispatchEvent(new Event('muela-install-available'));
+      });
+      window.addEventListener('appinstalled', function () {
+        window.__muelaDeferredPrompt = null;
+        window.dispatchEvent(new Event('muela-app-installed'));
+      });
+
+      function renderPngIcon(size) {
+        try {
+          var canvas = document.createElement('canvas');
+          canvas.width = size;
+          canvas.height = size;
+          var ctx = canvas.getContext('2d');
+          if (!ctx) return null;
+          ctx.fillStyle = '#E3F0E1';
+          ctx.fillRect(0, 0, size, size);
+
+          var pad = size * 0.14;
+          var s = (size - pad * 2) / 100;
+          ctx.save();
+          ctx.translate(pad, pad);
+          ctx.scale(s, s);
+
+          function roundRect(x, y, w, h, r, fill) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+            ctx.arcTo(x, y + h, x, y, r);
+            ctx.arcTo(x, y, x + w, y, r);
+            ctx.closePath();
+            ctx.fillStyle = fill;
+            ctx.fill();
+          }
+
+          roundRect(25, 28, 13, 24, 4, '#7D8D39');
+          roundRect(44, 16, 13, 36, 4, '#5B6E2C');
+          roundRect(63, 8, 13, 44, 4, '#FF5A22');
+
+          ctx.beginPath();
+          ctx.moveTo(14, 54);
+          ctx.lineTo(86, 54);
+          ctx.bezierCurveTo(85, 84, 65, 88, 50, 88);
+          ctx.bezierCurveTo(35, 88, 15, 84, 14, 54);
+          ctx.closePath();
+          ctx.strokeStyle = '#5B6E2C';
+          ctx.lineWidth = 8.5;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(37, 94);
+          ctx.lineTo(63, 94);
+          ctx.strokeStyle = '#7D8D39';
+          ctx.lineWidth = 7;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(64, 70, 5.5, 0, Math.PI * 2);
+          ctx.fillStyle = '#FF5A22';
+          ctx.fill();
+          ctx.restore();
+          return canvas.toDataURL('image/png');
+        } catch (err) {
+          return null;
+        }
+      }
+
+      try {
+        var icon192 = renderPngIcon(192);
+        var icon512 = renderPngIcon(512);
+        var appleIcon = document.getElementById('muela-apple-icon');
+        if (appleIcon && icon192) appleIcon.href = icon192;
+
+        if (location.protocol.indexOf('http') === 0) {
+          var icons = [];
+          if (icon192) icons.push({ src: icon192, sizes: '192x192', type: 'image/png', purpose: 'any' });
+          if (icon512) icons.push({ src: icon512, sizes: '512x512', type: 'image/png', purpose: 'any maskable' });
+          if (icons.length > 0) {
+            var manifestObj = {
+              id: location.pathname || './',
+              name: 'MUE LA',
+              short_name: 'MUE LA',
+              description: 'จัดการงบประมาณและคำนวณต้นทุนมื้ออาหาร',
+              start_url: location.href.split('#')[0],
+              scope: new URL('./', location.href).href,
+              display: 'standalone',
+              orientation: 'portrait',
+              background_color: '#E3F0E1',
+              theme_color: '#E3F0E1',
+              icons: icons
+            };
+            var manifestEl = document.getElementById('muela-manifest');
+            if (manifestEl) {
+              manifestEl.href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifestObj));
+            }
+          }
+        }
+      } catch (e) {}
+
+      if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('./sw.js').catch(function () {});
+        });
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            mintbg: '#E3F0E1',
+            olive: '#7D8D39',
+            deepolive: '#5B6E2C',
+            vibrant: '#FF5A22',
+            sageborder: '#BCD3BA',
+            softsage: '#D4E5D2',
+            softolive: '#EEF5E4',
+            softorange: '#FFEDE6',
+            charcoal: '#1E2519',
+            mutedolive: '#4F5E44'
+          },
+          fontFamily: {
+            prompt: ['Prompt', 'sans-serif'],
+            montserrat: ['Montserrat', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    html, body, #root {
+      background-color: #E3F0E1;
+      color: #1E2519;
+      font-family: 'Prompt', sans-serif;
+      min-height: 100dvh;
+      margin: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .font-num { font-family: 'Montserrat', sans-serif; }
+    .fade-page {
+      animation: muelaFade 150ms ease-out;
+    }
+    @keyframes muelaFade {
+      from { opacity: 0.4; }
+      to { opacity: 1; }
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+    .dashed-divider {
+      border-top: 2px dashed #BCD3BA;
+    }
+  </style>
+</head>
+<body class="bg-mintbg text-charcoal antialiased">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    // --- Constants & Helpers ---
+    const CATEGORIES = ['อาหารสด', 'วัตถุดิบ', 'เครื่องปรุง', 'เครื่องใช้', 'ของใช้', 'เครื่องดื่ม', 'ขนม'];
+    const UNITS = ['กิโลกรัม', 'กรัม', 'แพ็ก', 'ชิ้น', 'ขวด', 'ถุง', 'แผง'];
+    const QUICK_STORES = ['Makro', 'นานาผักสด', 'เอี้ยงผักสด'];
+    const PROFILE_COLORS = ['#7D8D39', '#5B6E2C', '#FF5A22', '#2D7D6E', '#3A5A78', '#8C5A3C'];
+    const THAI_MONTHS = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+    const THAI_DAYS = ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'];
+
+    const PROFILES_KEY = 'muela_profiles_v1';
+    const dataKey = (pid) => `muela_data_${pid}_v1`;
+
+    const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`);
+
+    const formatBaht = (n) => `฿${(Number(n) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    const formatCompact = (n) => (Number(n) || 0).toLocaleString('en-US', { maximumFractionDigits: 2 });
+
+    const todayISO = () => {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    };
+
+    const mondayOfCurrentWeekISO = () => {
+      const d = new Date();
+      const day = d.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      d.setDate(d.getDate() + diff);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    };
+
+    const addDaysISO = (iso, offset) => {
+      const [y, m, d] = iso.split('-').map(Number);
+      const dt = new Date(y, m - 1, d + offset);
+      return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+    };
+
+    const formatThaiDate = (iso) => {
+      if (!iso) return '';
+      const [y, m, d] = iso.split('-').map(Number);
+      return `${d} ${THAI_MONTHS[m - 1]} ${y + 543}`;
+    };
+
+    const formatThaiDayDate = (iso) => {
+      if (!iso) return '';
+      const [y, m, d] = iso.split('-').map(Number);
+      const dt = new Date(y, m - 1, d);
+      return `${THAI_DAYS[dt.getDay()]} ${d} ${THAI_MONTHS[m - 1]}`;
+    };
+
+    const roundThaiRetail = (raw, mode) => {
+      if (!raw || raw <= 0) return 0;
+      if (mode === 'QUARTER_25') return Math.round(raw * 4) / 4;
+      if (mode === 'WHOLE_BAHT') return Math.round(raw);
+      return Math.round(raw * 100) / 100;
+    };
+
+    const calcReceiptTotals = (items, includeVat, discountAmount, discountBeforeVat) => {
+      const subtotal = items.reduce((sum, it) => sum + (Number(it.quantity) * Number(it.unitPrice)), 0);
+      const safeDiscount = Math.max(0, Number(discountAmount) || 0);
+      let taxableBase, vatAmount, grandTotal;
+      if (discountBeforeVat) {
+        taxableBase = Math.max(0, subtotal - safeDiscount);
+        vatAmount = includeVat ? taxableBase * 0.07 : 0;
+        grandTotal = taxableBase + vatAmount;
+      } else {
+        taxableBase = subtotal;
+        vatAmount = includeVat ? taxableBase * 0.07 : 0;
+        grandTotal = Math.max(0, taxableBase + vatAmount - safeDiscount);
+      }
+      return { subtotal, discountApplied: safeDiscount, taxableBase, vatAmount, grandTotal };
+    };
+
+    const buildEmptyWeek = (startIso) =>
+      Array.from({ length: 7 }, (_, i) => ({
+        dayIndex: i,
+        dateIso: addDaysISO(startIso, i),
+        meal1: { name: '', cost: 0 },
+        meal2: { name: '', cost: 0 },
+        snack: { name: '', cost: 0 }
+      }));
+
+    const defaultProfileData = () => ({
+      budgetLimit: 700,
+      mealsPerDay: 2,
+      cartItems: [],
+      receipts: [],
+      mealPlans: [],
+      weeklyStartIso: mondayOfCurrentWeekISO(),
+      weeklyDays: buildEmptyWeek(mondayOfCurrentWeekISO()),
+      weeklyHistory: []
+    });
+
+    // --- SVG Brand Logo ---
+    const MueLaLogo = ({ size = 36 }) => (
+      <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+        <rect x="25" y="28" width="13" height="24" rx="4" fill="#7D8D39" />
+        <rect x="44" y="16" width="13" height="36" rx="4" fill="#5B6E2C" />
+        <rect x="63" y="8" width="13" height="44" rx="4" fill="#FF5A22" />
+        <path d="M14 54H86C85 84 65 88 50 88C35 88 15 84 14 54Z" stroke="#5B6E2C" strokeWidth="8.5" strokeLinecap="round" strokeLinejoin="round" />
+        <line x1="37" y1="94" x2="63" y2="94" stroke="#7D8D39" strokeWidth="7" strokeLinecap="round" />
+        <circle cx="64" cy="70" r="5.5" fill="#FF5A22" />
+      </svg>
+    );
+
+    // --- Clean Inline Icons (Lucide Style) ---
+    const Icon = ({ name, className = 'w-5 h-5' }) => {
+      const p = { className, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '2', strokeLinecap: 'round', strokeLinejoin: 'round' };
+      switch (name) {
+        case 'cart': return <svg {...p}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>;
+        case 'receipt': return <svg {...p}><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/></svg>;
+        case 'history': return <svg {...p}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>;
+        case 'utensils': return <svg {...p}><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>;
+        case 'calendar': return <svg {...p}><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>;
+        case 'plus': return <svg {...p}><path d="M5 12h14"/><path d="M12 5v14"/></svg>;
+        case 'minus': return <svg {...p}><path d="M5 12h14"/></svg>;
+        case 'trash': return <svg {...p}><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>;
+        case 'edit': return <svg {...p}><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>;
+        case 'swap': return <svg {...p}><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg>;
+        case 'lock': return <svg {...p}><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>;
+        case 'search': return <svg {...p}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>;
+        case 'close': return <svg {...p}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>;
+        case 'scale': return <svg {...p}><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>;
+        case 'check': return <svg {...p}><path d="M20 6 9 17l-5-5"/></svg>;
+        case 'download': return <svg {...p}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>;
+        default: return null;
+      }
+    };
+
+    // --- Main App ---
+    function App() {
+      const [profiles, setProfiles] = useState(() => {
+        try {
+          const raw = localStorage.getItem(PROFILES_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          }
+        } catch {}
+        return [{ id: 'profile_default', name: 'โปรไฟล์หลัก', color: '#7D8D39', pin: '1808', isDefaultSeed: true }];
+      });
+
+      const [activeProfileId, setActiveProfileId] = useState(null);
+      const [activeTab, setActiveTab] = useState('LIST_FOOD');
+      const [profileData, setProfileData] = useState(defaultProfileData());
+      const [toast, setToast] = useState('');
+      const [installPrompt, setInstallPrompt] = useState(() => window.__muelaDeferredPrompt || null);
+
+      useEffect(() => {
+        const onReady = () => setInstallPrompt(window.__muelaDeferredPrompt || null);
+        const onInstalled = () => {
+          setInstallPrompt(null);
+          showToast('ติดตั้งแอป MUE LA เรียบร้อยแล้ว');
+        };
+        window.addEventListener('muela-install-available', onReady);
+        window.addEventListener('muela-app-installed', onInstalled);
+        return () => {
+          window.removeEventListener('muela-install-available', onReady);
+          window.removeEventListener('muela-app-installed', onInstalled);
+        };
+      }, []);
+
+      const handleInstallApp = async () => {
+        const promptEvent = installPrompt || window.__muelaDeferredPrompt;
+        if (!promptEvent) return;
+        promptEvent.prompt();
+        try {
+          const choice = await promptEvent.userChoice;
+          if (choice && choice.outcome === 'accepted') {
+            setInstallPrompt(null);
+            window.__muelaDeferredPrompt = null;
+          }
+        } catch {}
+      };
+
+      // Persist profiles list
+      useEffect(() => {
+        localStorage.setItem(PROFILES_KEY, JSON.stringify(profiles));
+      }, [profiles]);
+
+      // Load active profile data when switching profile
+      useEffect(() => {
+        if (!activeProfileId) return;
+        try {
+          const raw = localStorage.getItem(dataKey(activeProfileId));
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            setProfileData({ ...defaultProfileData(), ...parsed });
+            return;
+          }
+        } catch {}
+        setProfileData(defaultProfileData());
+      }, [activeProfileId]);
+
+      // Persist active profile data
+      useEffect(() => {
+        if (!activeProfileId) return;
+        localStorage.setItem(dataKey(activeProfileId), JSON.stringify(profileData));
+      }, [activeProfileId, profileData]);
+
+      const showToast = (msg) => {
+        setToast(msg);
+        setTimeout(() => setToast((cur) => (cur === msg ? '' : cur)), 2400);
+      };
+
+      const activeProfile = useMemo(
+        () => profiles.find((p) => p.id === activeProfileId) || null,
+        [profiles, activeProfileId]
+      );
+
+      const updateData = (updater) => {
+        setProfileData((prev) => (typeof updater === 'function' ? updater(prev) : { ...prev, ...updater }));
+      };
+
+      if (!activeProfile) {
+        return (
+          <ProfileLoginView
+            profiles={profiles}
+            canInstall={!!installPrompt}
+            onInstallApp={handleInstallApp}
+            onLogin={(p) => {
+              setActiveProfileId(p.id);
+              setActiveTab('LIST_FOOD');
+            }}
+            onCreateProfile={(name, color, pin) => {
+              const newP = { id: uuid(), name: name.trim(), color, pin, isDefaultSeed: false };
+              setProfiles((prev) => [...prev, newP]);
+              setActiveProfileId(newP.id);
+              setActiveTab('LIST_FOOD');
+              showToast(`สร้างโปรไฟล์ ${newP.name} แล้ว`);
+            }}
+            onUpdateProfile={(id, name, color, pin) => {
+              setProfiles((prev) => prev.map((p) => (p.id === id ? { ...p, name: name.trim(), color, pin } : p)));
+              showToast(`อัปเดตโปรไฟล์ ${name.trim()} แล้ว`);
+            }}
+          />
+        );
+      }
+
+      const selectedCartCount = profileData.cartItems.filter((i) => i.isSelected).length;
+      const tabTitles = {
+        LIST_FOOD: 'List Food · รายการซื้อ',
+        DIGITAL_RECEIPT: 'Digital · ออกบิล',
+        RECEIPT: 'Receipt · สลิปย้อนหลัง',
+        MEAL_NOTE: 'Meal Note · คำนวณมื้อ',
+        WEEKLY_FOOD: 'Weekly · รายสัปดาห์'
+      };
+
+      return (
+        <div className="min-h-dvh flex flex-col bg-mintbg">
+          {/* Top Bar with Prominent Profile Banner */}
+          <header className="sticky top-0 z-30 bg-mintbg/95 backdrop-blur border-b border-sageborder">
+            <div className="max-w-xl mx-auto px-4 pt-3 pb-2">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <MueLaLogo size={34} />
+                  <div className="min-w-0">
+                    <div className="font-num font-bold text-lg text-deepolive leading-tight tracking-wide">MUE LA</div>
+                    <div className="text-xs text-mutedolive truncate">{tabTitles[activeTab]}</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {installPrompt && (
+                    <button
+                      onClick={handleInstallApp}
+                      className="h-11 px-3 rounded-xl bg-vibrant text-white text-xs font-semibold flex items-center gap-1 active:scale-95 transition"
+                    >
+                      <Icon name="download" className="w-4 h-4" />
+                      <span>ติดตั้ง</span>
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setActiveProfileId(null)}
+                    className="h-11 px-3 rounded-xl bg-white border border-sageborder text-deepolive text-xs font-semibold flex items-center gap-1.5 active:scale-95 transition shrink-0"
+                  >
+                    <Icon name="swap" className="w-4 h-4" />
+                    <span>สลับโปรไฟล์</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Active Profile Identity Strip */}
+              <div
+                className="mt-2 px-3 py-1.5 rounded-xl bg-white flex items-center gap-2 border-2"
+                style={{ borderColor: activeProfile.color + '88' }}
+              >
+                <span
+                  className="w-6 h-6 rounded-full text-white font-num font-bold text-xs flex items-center justify-center shrink-0"
+                  style={{ backgroundColor: activeProfile.color }}
+                >
+                  {activeProfile.name.charAt(0).toUpperCase()}
+                </span>
+                <span className="text-xs text-mutedolive shrink-0">หน้าจอของ:</span>
+                <span className="text-sm font-bold text-charcoal truncate">{activeProfile.name}</span>
+              </div>
+            </div>
+          </header>
+
+          {/* Main Tab Content */}
+          <main key={activeTab} className="flex-1 w-full max-w-xl mx-auto pb-24 fade-page">
+            {activeTab === 'LIST_FOOD' && (
+              <ListFoodTab
+                data={profileData}
+                updateData={updateData}
+                onGoDigital={() => setActiveTab('DIGITAL_RECEIPT')}
+                showToast={showToast}
+              />
+            )}
+            {activeTab === 'DIGITAL_RECEIPT' && (
+              <DigitalReceiptTab
+                data={profileData}
+                updateData={updateData}
+                onGoList={() => setActiveTab('LIST_FOOD')}
+                onSaved={() => {
+                  showToast('บันทึกใบเสร็จเรียบร้อย');
+                  setActiveTab('RECEIPT');
+                }}
+              />
+            )}
+            {activeTab === 'RECEIPT' && (
+              <ReceiptHistoryTab data={profileData} updateData={updateData} showToast={showToast} />
+            )}
+            {activeTab === 'MEAL_NOTE' && (
+              <MealNoteTab data={profileData} updateData={updateData} showToast={showToast} />
+            )}
+            {activeTab === 'WEEKLY_FOOD' && (
+              <WeeklyFoodTab data={profileData} updateData={updateData} showToast={showToast} />
+            )}
+          </main>
+
+          {/* Toast */}
+          {toast && (
+            <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-charcoal text-white text-xs font-medium px-4 py-2.5 rounded-full shadow-lg">
+              {toast}
+            </div>
+          )}
+
+          {/* Bottom Navigation Bar */}
+          <nav className="fixed bottom-0 inset-x-0 z-30 bg-white border-t border-sageborder safe-bottom shadow-[0_-4px_16px_rgba(0,0,0,0.04)]">
+            <div className="max-w-xl mx-auto grid grid-cols-5 h-16">
+              {[
+                { id: 'LIST_FOOD', label: 'รายการซื้อ', icon: 'cart' },
+                { id: 'DIGITAL_RECEIPT', label: 'ออกบิล', icon: 'receipt', badge: selectedCartCount },
+                { id: 'RECEIPT', label: 'สลิป', icon: 'history' },
+                { id: 'MEAL_NOTE', label: 'คำนวณมื้อ', icon: 'utensils' },
+                { id: 'WEEKLY_FOOD', label: 'รายสัปดาห์', icon: 'calendar' }
+              ].map((t) => {
+                const active = activeTab === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => setActiveTab(t.id)}
+                    className={`flex flex-col items-center justify-center gap-0.5 relative transition ${
+                      active ? 'text-deepolive font-semibold' : 'text-mutedolive'
+                    }`}
+                  >
+                    <div className={`px-3 py-1 rounded-full relative ${active ? 'bg-softolive' : ''}`}>
+                      <Icon name={t.icon} className="w-5 h-5" />
+                      {t.badge > 0 && (
+                        <span className="absolute -top-1 -right-0.5 min-w-[17px] h-[17px] px-1 rounded-full bg-vibrant text-white font-num font-bold text-[10px] flex items-center justify-center">
+                          {t.badge}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-[10.5px] leading-none">{t.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </nav>
+        </div>
+      );
+    }
+
+    // --- Profile & PIN Login View ---
+    function ProfileLoginView({ profiles, canInstall, onInstallApp, onLogin, onCreateProfile, onUpdateProfile }) {
+      const [pinTarget, setPinTarget] = useState(null);
+      const [enteredPin, setEnteredPin] = useState('');
+      const [pinError, setPinError] = useState(false);
+      const [formModal, setFormModal] = useState(null); // { mode: 'add' | 'edit', profile? }
+
+      const pressDigit = (d) => {
+        if (enteredPin.length >= 4) return;
+        setPinError(false);
+        const next = enteredPin + d;
+        setEnteredPin(next);
+        if (next.length === 4) {
+          if (next === pinTarget.pin) {
+            onLogin(pinTarget);
+            setPinTarget(null);
+            setEnteredPin('');
+          } else {
+            setPinError(true);
+            setEnteredPin('');
+          }
+        }
+      };
+
+      return (
+        <div className="min-h-dvh bg-mintbg px-5 py-8 flex flex-col items-center fade-page">
+          <div className="w-full max-w-md flex flex-col items-center">
+            <MueLaLogo size={64} />
+            <h1 className="mt-3 font-num font-bold text-3xl text-deepolive tracking-wider">MUE LA</h1>
+            <p className="text-sm text-mutedolive font-medium">เลือกโปรไฟล์ผู้ใช้งาน</p>
+            {canInstall && (
+              <button
+                onClick={onInstallApp}
+                className="mt-3 h-10 px-4 rounded-full bg-vibrant text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm active:scale-95 transition"
+              >
+                <Icon name="download" className="w-4 h-4" />
+                <span>ติดตั้งแอป MUE LA ลงหน้าจอมือถือ</span>
+              </button>
+            )}
+
+            <div className="mt-7 w-full grid grid-cols-2 gap-3.5">
+              {profiles.map((p) => (
+                <div
+                  key={p.id}
+                  onClick={() => { setPinTarget(p); setEnteredPin(''); setPinError(false); }}
+                  className="relative bg-white rounded-2xl p-4 flex flex-col items-center border-2 shadow-sm cursor-pointer active:scale-95 transition"
+                  style={{ borderColor: p.color + '99' }}
+                >
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setFormModal({ mode: 'edit', profile: p }); }}
+                    className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center text-mutedolive hover:bg-mintbg"
+                    aria-label="แก้ไขโปรไฟล์"
+                  >
+                    <Icon name="edit" className="w-4 h-4" />
+                  </button>
+                  <div
+                    className="w-16 h-16 rounded-full text-white font-num font-bold text-2xl flex items-center justify-center"
+                    style={{ backgroundColor: p.color }}
+                  >
+                    {p.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="mt-3 font-bold text-base text-charcoal text-center truncate w-full">{p.name}</div>
+                  <div className="mt-1 flex items-center gap-1 text-[11px] text-mutedolive font-num">
+                    <Icon name="lock" className="w-3 h-3" />
+                    <span>{p.isDefaultSeed && p.pin === '1808' ? 'PIN: 1808' : 'PIN 4 หลัก'}</span>
+                  </div>
+                </div>
+              ))}
+
+              <button
+                onClick={() => setFormModal({ mode: 'add' })}
+                className="bg-softolive/70 rounded-2xl p-4 flex flex-col items-center justify-center border-2 border-dashed border-olive/60 active:scale-95 transition"
+              >
+                <div className="w-16 h-16 rounded-full bg-white border border-olive flex items-center justify-center text-deepolive">
+                  <Icon name="plus" className="w-7 h-7" />
+                </div>
+                <div className="mt-3 font-semibold text-sm text-deepolive">+ เพิ่มโปรไฟล์</div>
+                <div className="text-[11px] text-mutedolive">ตั้งชื่อ & PIN</div>
+              </button>
+            </div>
+          </div>
+
+          {/* 4-Digit PIN Modal */}
+          {pinTarget && (
+            <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+              <div className="bg-white rounded-3xl w-full max-w-xs p-5 border border-sageborder shadow-xl relative flex flex-col items-center">
+                <button
+                  onClick={() => setPinTarget(null)}
+                  className="absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center text-mutedolive"
+                >
+                  <Icon name="close" className="w-5 h-5" />
+                </button>
+                <div
+                  className="w-14 h-14 rounded-full text-white font-num font-bold text-xl flex items-center justify-center"
+                  style={{ backgroundColor: pinTarget.color }}
+                >
+                  {pinTarget.name.charAt(0).toUpperCase()}
+                </div>
+                <div className="mt-2 font-bold text-lg text-charcoal">{pinTarget.name}</div>
+                <div className="text-xs text-mutedolive">กรอกรหัส PIN 4 หลัก</div>
+
+                <div className="my-4 flex gap-3.5">
+                  {[0, 1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      className={`w-4 h-4 rounded-full border-2 transition ${
+                        pinError
+                          ? 'bg-vibrant/25 border-vibrant'
+                          : i < enteredPin.length
+                          ? 'bg-olive border-deepolive'
+                          : 'bg-mintbg border-sageborder'
+                      }`}
+                    />
+                  ))}
+                </div>
+                {pinError && <div className="text-xs text-vibrant font-medium mb-2">รหัส PIN ไม่ถูกต้อง</div>}
+
+                <div className="grid grid-cols-3 gap-2.5 mt-1">
+                  {['1','2','3','4','5','6','7','8','9','C','0','DEL'].map((k) => (
+                    <button
+                      key={k}
+                      onClick={() => {
+                        if (k === 'C') { setEnteredPin(''); setPinError(false); }
+                        else if (k === 'DEL') setEnteredPin((p) => p.slice(0, -1));
+                        else pressDigit(k);
+                      }}
+                      className={`w-16 h-16 rounded-full flex items-center justify-center font-num font-semibold text-xl active:scale-90 transition ${
+                        k === 'C'
+                          ? 'bg-softorange text-vibrant font-prompt text-sm'
+                          : k === 'DEL'
+                          ? 'bg-mintbg text-deepolive font-prompt text-sm'
+                          : 'bg-mintbg border border-sageborder text-charcoal'
+                      }`}
+                    >
+                      {k === 'C' ? 'ล้าง' : k === 'DEL' ? 'ลบ' : k}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Add/Edit Profile Modal */}
+          {formModal && (
+            <ProfileFormModal
+              mode={formModal.mode}
+              profile={formModal.profile}
+              onClose={() => setFormModal(null)}
+              onSubmit={(name, color, pin) => {
+                if (formModal.mode === 'add') onCreateProfile(name, color, pin);
+                else onUpdateProfile(formModal.profile.id, name, color, pin);
+                setFormModal(null);
+              }}
+            />
+          )}
+        </div>
+      );
+    }
+
+    function ProfileFormModal({ mode, profile, onClose, onSubmit }) {
+      const [name, setName] = useState(profile?.name || '');
+      const [color, setColor] = useState(profile?.color || PROFILE_COLORS[0]);
+      const [pin, setPin] = useState(profile?.pin || '');
+      const [err, setErr] = useState('');
+
+      return (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-end sm:items-center justify-center">
+          <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 pb-8 border-t border-sageborder">
+            <h2 className="font-bold text-lg text-deepolive">{mode === 'add' ? 'เพิ่มโปรไฟล์ใหม่' : 'แก้ไขโปรไฟล์'}</h2>
+            <p className="text-xs text-mutedolive mb-4">ข้อมูลรายการซื้อและใบเสร็จจะแยกจัดเก็บตามโปรไฟล์</p>
+
+            <label className="block text-xs font-medium text-charcoal mb-1">ชื่อโปรไฟล์</label>
+            <input
+              value={name}
+              onChange={(e) => { setName(e.target.value); setErr(''); }}
+              placeholder="เช่น บ้านเรา, แม่ครัว"
+              className="w-full h-11 px-3 rounded-xl border border-sageborder focus:outline-none focus:border-olive text-sm"
+            />
+
+            <label className="block text-xs font-medium text-charcoal mt-3 mb-2">สีประจำโปรไฟล์</label>
+            <div className="flex gap-2.5">
+              {PROFILE_COLORS.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setColor(c)}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center text-white ${color === c ? 'ring-2 ring-charcoal ring-offset-2' : ''}`}
+                  style={{ backgroundColor: c }}
+                >
+                  {color === c && <Icon name="check" className="w-5 h-5" />}
+                </button>
+              ))}
+            </div>
+
+            <label className="block text-xs font-medium text-charcoal mt-3 mb-1">รหัส PIN 4 หลัก</label>
+            <input
+              type="password"
+              inputMode="numeric"
+              maxLength={4}
+              value={pin}
+              onChange={(e) => { setPin(e.target.value.replace(/\D/g, '').slice(0, 4)); setErr(''); }}
+              placeholder="เช่น 1234"
+              className="w-full h-11 px-3 rounded-xl border border-sageborder focus:outline-none focus:border-olive text-sm font-num"
+            />
+
+            {err && <div className="text-xs text-vibrant mt-2">{err}</div>}
+
+            <div className="flex gap-2.5 mt-5">
+              <button onClick={onClose} className="flex-1 h-11 rounded-xl text-mutedolive font-medium text-sm">ยกเลิก</button>
+              <button
+                onClick={() => {
+                  if (!name.trim()) return setErr('กรุณากรอกชื่อโปรไฟล์');
+                  if (pin.length !== 4) return setErr('กรุณากรอกรหัส PIN ให้ครบ 4 หลัก');
+                  onSubmit(name, color, pin);
+                }}
+                className="flex-[2] h-11 rounded-xl bg-olive text-white font-semibold text-sm"
+              >
+                {mode === 'add' ? 'สร้างโปรไฟล์' : 'บันทึกการแก้ไข'}
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // --- Menu 1: List Food ---
+    function ListFoodTab({ data, updateData, onGoDigital, showToast }) {
+      const [showAddSheet, setShowAddSheet] = useState(false);
+      const [showBudgetModal, setShowBudgetModal] = useState(false);
+      const [editingItem, setEditingItem] = useState(null);
+
+      const items = data.cartItems;
+      const selected = items.filter((i) => i.isSelected);
+      const selectedTotal = selected.reduce((s, i) => s + i.quantity * i.unitPrice, 0);
+      const allSelected = items.length > 0 && selected.length === items.length;
+      const isOver = data.budgetLimit > 0 && selectedTotal > data.budgetLimit;
+      const pct = data.budgetLimit > 0 ? Math.min(100, (selectedTotal / data.budgetLimit) * 100) : 0;
+      const remaining = data.budgetLimit - selectedTotal;
+
+      return (
+        <div className="px-4 pt-4 space-y-3">
+          {/* Budget Tracker */}
+          <div className={`bg-white rounded-2xl p-4 border ${isOver ? 'border-vibrant' : 'border-sageborder'} shadow-sm`}>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-xs text-mutedolive">งบประมาณการซื้อรอบนี้</div>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-num font-bold text-2xl text-deepolive">{formatBaht(data.budgetLimit)}</span>
+                  <span className="text-xs text-mutedolive">/ รอบ</span>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowBudgetModal(true)}
+                className="h-10 px-3 rounded-xl bg-softolive text-deepolive text-xs font-semibold flex items-center gap-1"
+              >
+                <Icon name="edit" className="w-3.5 h-3.5" />
+                <span>ตั้งงบ</span>
+              </button>
+            </div>
+            <div className="mt-3 h-2.5 w-full rounded-full bg-softsage overflow-hidden">
+              <div className={`h-full rounded-full transition-all ${isOver ? 'bg-vibrant' : 'bg-olive'}`} style={{ width: `${pct}%` }} />
+            </div>
+            <div className="mt-2.5 flex items-center justify-between text-xs font-semibold">
+              <span className={isOver ? 'text-vibrant' : 'text-deepolive'}>
+                {isOver ? `เกินงบ ${formatBaht(-remaining)}` : `คงเหลือ ${formatBaht(remaining)}`}
+              </span>
+              <span className={`font-num ${isOver ? 'text-vibrant' : 'text-charcoal'}`}>ในตะกร้า {formatBaht(selectedTotal)}</span>
+            </div>
+          </div>
+
+          {/* Select All & Clean Cart List */}
+          {items.length > 0 ? (
+            <>
+              <div
+                onClick={() => updateData((p) => ({ ...p, cartItems: p.cartItems.map((i) => ({ ...i, isSelected: !allSelected })) }))}
+                className="bg-white rounded-xl px-3.5 py-2.5 border border-sageborder flex items-center justify-between cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <input type="checkbox" checked={allSelected} readOnly className="w-4 h-4 accent-olive" />
+                  <span className="text-sm font-medium">{allSelected ? 'ยกเลิกเลือกทั้งหมด' : 'เลือกทั้งหมด'}</span>
+                </div>
+                <span className="text-xs text-mutedolive">เลือก {selected.length}/{items.length} รายการ</span>
+              </div>
+
+              <div className="space-y-2.5 pb-20">
+                {items.map((item) => (
+                  <div
+                    key={item.id}
+                    className={`bg-white rounded-2xl p-3 border ${item.isSelected ? 'border-olive/70' : 'border-sageborder opacity-80'}`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={item.isSelected}
+                        onChange={() => updateData((p) => ({
+                          ...p,
+                          cartItems: p.cartItems.map((c) => (c.id === item.id ? { ...c, isSelected: !c.isSelected } : c))
+                        }))}
+                        className="w-5 h-5 accent-olive shrink-0"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-sm text-charcoal truncate">{item.name}</div>
+                        <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                          <span className="px-1.5 py-0.5 rounded bg-softolive text-deepolive text-[10px]">{item.category}</span>
+                          <span className="text-[11px] text-mutedolive">
+                            {item.isWeighted
+                              ? `${formatCompact(item.weightKg)} กก. × ${formatBaht(item.pricePerKg)}/กก.`
+                              : `${formatBaht(item.unitPrice)} / ${item.unit}`}
+                          </span>
+                        </div>
+                      </div>
+                      <button onClick={() => setEditingItem(item)} className="p-2 text-deepolive"><Icon name="edit" className="w-4 h-4" /></button>
+                      <button
+                        onClick={() => updateData((p) => ({ ...p, cartItems: p.cartItems.filter((c) => c.id !== item.id) }))}
+                        className="p-2 text-vibrant"
+                      >
+                        <Icon name="trash" className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    <div className="mt-2.5 pt-2 border-t border-softsage flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => updateData((p) => ({
+                            ...p,
+                            cartItems: p.cartItems.map((c) =>
+                              c.id === item.id ? { ...c, quantity: Math.max(0.5, c.quantity - (c.quantity > 1 ? 1 : 0.5)) } : c
+                            )
+                          }))}
+                          className="w-8 h-8 rounded-full bg-softsage flex items-center justify-center text-charcoal"
+                        >
+                          <Icon name="minus" className="w-3.5 h-3.5" />
+                        </button>
+                        <span onClick={() => setEditingItem(item)} className="text-xs font-medium px-1 cursor-pointer">
+                          {formatCompact(item.quantity)} {item.unit}
+                        </span>
+                        <button
+                          onClick={() => updateData((p) => ({
+                            ...p,
+                            cartItems: p.cartItems.map((c) => (c.id === item.id ? { ...c, quantity: c.quantity + 1 } : c))
+                          }))}
+                          className="w-8 h-8 rounded-full bg-softolive flex items-center justify-center text-deepolive"
+                        >
+                          <Icon name="plus" className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                      <span className={`font-num font-bold text-base ${item.isSelected ? 'text-deepolive' : 'text-mutedolive'}`}>
+                        {formatBaht(item.quantity * item.unitPrice)}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="bg-white rounded-2xl p-7 border border-sageborder text-center flex flex-col items-center">
+              <div className="w-16 h-16 rounded-full bg-softolive text-olive flex items-center justify-center mb-3">
+                <Icon name="cart" className="w-8 h-8" />
+              </div>
+              <div className="font-semibold text-base text-charcoal">ตะกร้ารายการซื้อยังว่างอยู่</div>
+              <div className="text-xs text-mutedolive mt-1">กดปุ่ม "+ เพิ่มสินค้า" เพื่อบันทึกรายการและคำนวณงบแบบเรียลไทม์</div>
+              <button
+                onClick={() => setShowAddSheet(true)}
+                className="mt-4 h-11 px-5 rounded-xl bg-olive text-white text-sm font-semibold flex items-center gap-1.5"
+              >
+                <Icon name="plus" className="w-4 h-4" />
+                <span>เพิ่มรายการแรก</span>
+              </button>
+            </div>
+          )}
+
+          {/* Floating Add Item Button */}
+          <button
+            onClick={() => setShowAddSheet(true)}
+            className={`fixed right-4 z-20 h-12 px-4 rounded-2xl bg-olive text-white font-semibold text-sm shadow-lg flex items-center gap-1.5 active:scale-95 transition ${
+              items.length > 0 ? 'bottom-36' : 'bottom-20'
+            }`}
+          >
+            <Icon name="plus" className="w-4 h-4" />
+            <span>เพิ่มสินค้า</span>
+          </button>
+
+          {/* Bottom Checkout Bar */}
+          {items.length > 0 && (
+            <div className="fixed bottom-16 inset-x-0 z-20 bg-white border-t border-sageborder safe-bottom">
+              <div className="max-w-xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
+                <div>
+                  <div className="text-[11px] text-mutedolive">ยอดที่เลือกออกบิล ({selected.length} รายการ)</div>
+                  <div className="font-num font-bold text-lg text-vibrant">{formatBaht(selectedTotal)}</div>
+                </div>
+                <button
+                  disabled={selected.length === 0}
+                  onClick={onGoDigital}
+                  className="h-11 px-4 rounded-xl bg-vibrant disabled:bg-softsage text-white font-semibold text-sm flex items-center gap-1.5"
+                >
+                  <Icon name="receipt" className="w-4 h-4" />
+                  <span>ออกใบเสร็จ</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Add Item Bottom Sheet */}
+          {showAddSheet && (
+            <AddItemBottomSheet
+              onClose={() => setShowAddSheet(false)}
+              onAdd={(newItem) => {
+                updateData((p) => ({ ...p, cartItems: [{ ...newItem, id: uuid(), isSelected: true }, ...p.cartItems] }));
+                showToast(`เพิ่ม ${newItem.name} ลงตะกร้าแล้ว`);
+                setShowAddSheet(false);
+              }}
+            />
+          )}
+
+          {/* Budget Edit Modal */}
+          {showBudgetModal && (
+            <BudgetModal
+              current={data.budgetLimit}
+              onClose={() => setShowBudgetModal(false)}
+              onSave={(val) => {
+                updateData({ budgetLimit: val });
+                showToast(`ตั้งงบเป็น ${formatBaht(val)}`);
+                setShowBudgetModal(false);
+              }}
+            />
+          )}
+
+          {/* Item Edit Modal */}
+          {editingItem && (
+            <EditCartItemModal
+              item={editingItem}
+              onClose={() => setEditingItem(null)}
+              onSave={(qty, price) => {
+                updateData((p) => ({
+                  ...p,
+                  cartItems: p.cartItems.map((c) => (c.id === editingItem.id ? { ...c, quantity: qty, unitPrice: price } : c))
+                }));
+                setEditingItem(null);
+              }}
+            />
+          )}
+        </div>
+      );
+    }
+
+    function AddItemBottomSheet({ onClose, onAdd }) {
+      const [name, setName] = useState('');
+      const [category, setCategory] = useState(CATEGORIES[0]);
+      const [unit, setUnit] = useState(UNITS[0]);
+      const [isWeighted, setIsWeighted] = useState(false);
+      const [weightKg, setWeightKg] = useState('');
+      const [pricePerKg, setPricePerKg] = useState('');
+      const [roundingMode, setRoundingMode] = useState('QUARTER_25');
+      const [qty, setQty] = useState('1');
+      const [unitPrice, setUnitPrice] = useState('');
+      const [err, setErr] = useState('');
+
+      const rawWeighted = (parseFloat(weightKg) || 0) * (parseFloat(pricePerKg) || 0);
+      const roundedWeighted = roundThaiRetail(rawWeighted, roundingMode);
+
+      const handleSubmit = () => {
+        if (!name.trim()) return setErr('กรุณากรอกชื่อสินค้า');
+        if (isWeighted) {
+          const w = parseFloat(weightKg) || 0;
+          const p = parseFloat(pricePerKg) || 0;
+          if (w <= 0 || p <= 0) return setErr('กรุณากรอกน้ำหนักและราคา/กก. ให้ถูกต้อง');
+          onAdd({ name: name.trim(), category, unit, isWeighted: true, weightKg: w, pricePerKg: p, roundingMode, quantity: 1, unitPrice: roundedWeighted });
+        } else {
+          const q = parseFloat(qty) || 0;
+          const p = parseFloat(unitPrice);
+          if (q <= 0 || isNaN(p) || p < 0) return setErr('กรุณากรอกจำนวนและราคาต่อหน่วยให้ถูกต้อง');
+          onAdd({ name: name.trim(), category, unit, isWeighted: false, weightKg: 0, pricePerKg: 0, roundingMode: 'NONE', quantity: q, unitPrice: p });
+        }
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-end sm:items-center justify-center">
+          <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 pb-8 max-h-[90dvh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-softsage">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-softolive text-deepolive flex items-center justify-center"><Icon name="plus" className="w-4 h-4" /></div>
+                <h2 className="font-bold text-base text-deepolive">เพิ่มรายการสินค้า</h2>
+              </div>
+              <button onClick={onClose} className="p-2 text-mutedolive"><Icon name="close" className="w-5 h-5" /></button>
+            </div>
+
+            <div className="mt-3 space-y-3">
+              <div>
+                <label className="block text-xs font-medium mb-1">ชื่อสินค้า / วัตถุดิบ</label>
+                <input
+                  value={name}
+                  onChange={(e) => { setName(e.target.value); setErr(''); }}
+                  placeholder="เช่น สันในไก่, คะน้า, น้ำปลา"
+                  className="w-full h-11 px-3 rounded-xl border border-sageborder focus:outline-none focus:border-olive text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium mb-1.5">หมวดหมู่</label>
+                <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
+                  {CATEGORIES.map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => setCategory(c)}
+                      className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap border ${
+                        category === c ? 'bg-olive text-white border-olive' : 'bg-white text-charcoal border-sageborder'
+                      }`}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium mb-1.5">หน่วยนับ</label>
+                <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
+                  {UNITS.map((u) => (
+                    <button
+                      key={u}
+                      onClick={() => setUnit(u)}
+                      className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap border ${
+                        unit === u ? 'bg-deepolive text-white border-deepolive' : 'bg-white text-charcoal border-sageborder'
+                      }`}
+                    >
+                      {u}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Weighted Toggle */}
+              <div className="p-3 rounded-xl bg-softolive/70 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <Icon name="scale" className="w-5 h-5 text-deepolive shrink-0" />
+                  <div>
+                    <div className="text-xs font-semibold">สินค้าชั่งน้ำหนัก (แบบแมคโคร)</div>
+                    <div className="text-[11px] text-mutedolive">คำนวณน้ำหนัก × ราคา/กก. + ปัดเศษ</div>
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={isWeighted}
+                  onChange={(e) => {
+                    setIsWeighted(e.target.checked);
+                    if (e.target.checked) setUnit('กิโลกรัม');
+                    setErr('');
+                  }}
+                  className="w-5 h-5 accent-olive"
+                />
+              </div>
+
+              {isWeighted ? (
+                <div className="space-y-2.5">
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-xs mb-1">น้ำหนัก (กก.)</label>
+                      <input type="number" step="0.01" inputMode="decimal" value={weightKg} onChange={(e) => setWeightKg(e.target.value)} placeholder="0.45" className="w-full h-11 px-3 rounded-xl border border-sageborder font-num text-sm" />
+                    </div>
+                    <div>
+                      <label className="block text-xs mb-1">ราคา/กก. (฿)</label>
+                      <input type="number" step="0.01" inputMode="decimal" value={pricePerKg} onChange={(e) => setPricePerKg(e.target.value)} placeholder="189" className="w-full h-11 px-3 rounded-xl border border-sageborder font-num text-sm" />
+                    </div>
+                  </div>
+                  <div className="flex gap-1.5 flex-wrap">
+                    {[
+                      { id: 'NONE', label: 'ไม่ปัดเศษ' },
+                      { id: 'QUARTER_25', label: 'ปัด .00/.25/.50/.75' },
+                      { id: 'WHOLE_BAHT', label: 'ปัดเต็มบาท' }
+                    ].map((r) => (
+                      <button
+                        key={r.id}
+                        onClick={() => setRoundingMode(r.id)}
+                        className={`px-2.5 py-1.5 rounded-lg text-[11px] border ${
+                          roundingMode === r.id ? 'bg-vibrant text-white border-vibrant' : 'bg-white text-charcoal border-sageborder'
+                        }`}
+                      >
+                        {r.label}
+                      </button>
+                    ))}
+                  </div>
+                  {rawWeighted > 0 && (
+                    <div className="px-3 py-2 rounded-xl bg-softorange flex items-center justify-between text-xs">
+                      <span>ดิบ {formatBaht(rawWeighted)} → ปัดเป็น</span>
+                      <span className="font-num font-bold text-sm text-vibrant">{formatBaht(roundedWeighted)}</span>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-2.5">
+                  <div>
+                    <label className="block text-xs mb-1">จำนวน</label>
+                    <input type="number" step="0.1" inputMode="decimal" value={qty} onChange={(e) => setQty(e.target.value)} className="w-full h-11 px-3 rounded-xl border border-sageborder font-num text-sm" />
+                  </div>
+                  <div>
+                    <label className="block text-xs mb-1">ราคา/หน่วย (฿)</label>
+                    <input type="number" step="0.01" inputMode="decimal" value={unitPrice} onChange={(e) => setUnitPrice(e.target.value)} placeholder="0.00" className="w-full h-11 px-3 rounded-xl border border-sageborder font-num text-sm" />
+                  </div>
+                </div>
+              )}
+
+              {err && <div className="text-xs text-vibrant">{err}</div>}
+
+              <button onClick={handleSubmit} className="w-full h-12 rounded-xl bg-olive text-white font-semibold text-sm flex items-center justify-center gap-1.5">
+                <Icon name="plus" className="w-4 h-4" />
+                <span>เพิ่มลงรายการซื้อของ</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function BudgetModal({ current, onClose, onSave }) {
+      const [val, setVal] = useState(String(current));
+      return (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-xs p-5 border border-sageborder">
+            <h3 className="font-bold text-base text-deepolive mb-3">ตั้งงบประมาณต่อรอบ (บาท)</h3>
+            <input type="number" inputMode="decimal" value={val} onChange={(e) => setVal(e.target.value)} className="w-full h-11 px-3 rounded-xl border border-sageborder font-num text-base" />
+            <div className="flex justify-end gap-2 mt-4">
+              <button onClick={onClose} className="px-4 h-10 text-sm text-mutedolive">ยกเลิก</button>
+              <button onClick={() => onSave(Math.max(0, parseFloat(val) || 0))} className="px-4 h-10 rounded-xl bg-olive text-white text-sm font-semibold">บันทึก</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function EditCartItemModal({ item, onClose, onSave }) {
+      const [qty, setQty] = useState(String(item.quantity));
+      const [price, setPrice] = useState(String(item.unitPrice));
+      return (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-xs p-5 border border-sageborder space-y-3">
+            <h3 className="font-bold text-base text-deepolive truncate">แก้ไข {item.name}</h3>
+            <div>
+              <label className="block text-xs mb-1">จำนวน ({item.unit})</label>
+              <input type="number" step="0.1" inputMode="decimal" value={qty} onChange={(e) => setQty(e.target.value)} className="w-full h-11 px-3 rounded-xl border border-sageborder font-num text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs mb-1">ราคาต่อหน่วย (฿)</label>
+              <input type="number" step="0.01" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} className="w-full h-11 px-3 rounded-xl border border-sageborder font-num text-sm" />
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <button onClick={onClose} className="px-4 h-10 text-sm text-mutedolive">ยกเลิก</button>
+              <button onClick={() => onSave(Math.max(0.1, parseFloat(qty) || item.quantity), Math.max(0, parseFloat(price) || 0))} className="px-4 h-10 rounded-xl bg-olive text-white text-sm font-semibold">อัปเดต</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // --- Menu 2: Digital Receipt ---
+    function DigitalReceiptTab({ data, updateData, onGoList, onSaved }) {
+      const selected = data.cartItems.filter((i) => i.isSelected);
+      const [storeName, setStoreName] = useState('Makro');
+      const [dateIso, setDateIso] = useState(todayISO());
+      const [includeVat, setIncludeVat] = useState(false);
+      const [discount, setDiscount] = useState('');
+      const [discountBeforeVat, setDiscountBeforeVat] = useState(true);
+
+      const totals = useMemo(
+        () => calcReceiptTotals(selected, includeVat, parseFloat(discount) || 0, discountBeforeVat),
+        [selected, includeVat, discount, discountBeforeVat]
+      );
+
+      if (selected.length === 0) {
+        return (
+          <div className="px-4 py-16 flex flex-col items-center text-center">
+            <div className="w-16 h-16 rounded-full bg-softolive text-olive flex items-center justify-center mb-3"><Icon name="receipt" className="w-8 h-8" /></div>
+            <div className="font-semibold text-base">ยังไม่มีรายการสินค้าที่เลือกออกบิล</div>
+            <div className="text-xs text-mutedolive mt-1">กลับไปติ๊กเลือกรายการในเมนู List Food แล้วกดออกใบเสร็จ</div>
+            <button onClick={onGoList} className="mt-4 h-11 px-5 rounded-xl bg-olive text-white text-sm font-semibold">ไปที่รายการซื้อของ</button>
+          </div>
+        );
+      }
+
+      return (
+        <div className="px-4 pt-4 space-y-3.5">
+          {/* Store & Date */}
+          <div className="bg-white rounded-2xl p-4 border border-sageborder space-y-3">
+            <div className="font-semibold text-sm text-deepolive">ข้อมูลสถานที่และวันที่ซื้อ</div>
+            <input value={storeName} onChange={(e) => setStoreName(e.target.value)} placeholder="ชื่อร้านค้า" className="w-full h-11 px-3 rounded-xl border border-sageborder text-sm" />
+            <div className="flex gap-2 flex-wrap">
+              {QUICK_STORES.map((s) => (
+                <button key={s} onClick={() => setStoreName(s)} className={`px-3 py-1.5 rounded-full text-xs border ${storeName === s ? 'bg-olive text-white border-olive' : 'bg-white text-charcoal border-sageborder'}`}>{s}</button>
+              ))}
+            </div>
+            <div>
+              <label className="block text-xs text-mutedolive mb-1">วันที่ซื้อ</label>
+              <input type="date" value={dateIso} onChange={(e) => setDateIso(e.target.value)} className="w-full h-11 px-3 rounded-xl border border-sageborder text-sm font-num" />
+            </div>
+          </div>
+
+          {/* VAT & Discount */}
+          <div className="bg-white rounded-2xl p-4 border border-sageborder space-y-3">
+            <div className="font-semibold text-sm text-deepolive">ภาษีมูลค่าเพิ่มและส่วนลด</div>
+            <label className="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" checked={includeVat} onChange={(e) => setIncludeVat(e.target.checked)} className="w-4 h-4 accent-olive" />
+              <span className="text-sm font-medium">คำนวณภาษีมูลค่าเพิ่ม VAT 7%</span>
+            </label>
+            <input type="number" step="0.01" inputMode="decimal" value={discount} onChange={(e) => setDiscount(e.target.value)} placeholder="ส่วนลด (บาท)" className="w-full h-11 px-3 rounded-xl border border-sageborder text-sm font-num" />
+            {includeVat && (parseFloat(discount) || 0) > 0 && (
+              <div className="flex gap-2">
+                <button onClick={() => setDiscountBeforeVat(true)} className={`px-3 py-1.5 rounded-full text-xs border ${discountBeforeVat ? 'bg-deepolive text-white border-deepolive' : 'border-sageborder'}`}>หักส่วนลดก่อน VAT</button>
+                <button onClick={() => setDiscountBeforeVat(false)} className={`px-3 py-1.5 rounded-full text-xs border ${!discountBeforeVat ? 'bg-deepolive text-white border-deepolive' : 'border-sageborder'}`}>หักส่วนลดหลัง VAT</button>
+              </div>
+            )}
+          </div>
+
+          {/* Minimalist Digital Receipt Card */}
+          <div className="bg-white rounded-2xl p-4 border-2 border-deepolive/40 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2"><MueLaLogo size={26} /><span className="font-num font-bold text-xs text-deepolive">MUE LA RECEIPT</span></div>
+              <span className="text-xs text-mutedolive">{formatThaiDate(dateIso)}</span>
+            </div>
+            <div className="mt-1.5 font-bold text-lg text-charcoal">{storeName.trim() || 'ร้านค้าทั่วไป'}</div>
+            <div className="my-3 dashed-divider" />
+            <div className="space-y-1.5">
+              {selected.map((it) => (
+                <div key={it.id} className="flex justify-between items-start text-sm">
+                  <div>
+                    <div className="font-medium text-charcoal">{it.name}</div>
+                    <div className="text-[11px] text-mutedolive">{formatCompact(it.quantity)} {it.unit} × {formatBaht(it.unitPrice)}</div>
+                  </div>
+                  <span className="font-num font-semibold">{formatBaht(it.quantity * it.unitPrice)}</span>
+                </div>
+              ))}
+            </div>
+            <div className="my-3 dashed-divider" />
+            <div className="space-y-1 text-xs">
+              <div className="flex justify-between"><span className="text-mutedolive">รวมสินค้า ({selected.length} รายการ)</span><span className="font-num">{formatBaht(totals.subtotal)}</span></div>
+              {totals.discountApplied > 0 && (
+                <div className="flex justify-between text-olive"><span>ส่วนลด ({discountBeforeVat ? 'ก่อน VAT' : 'หลัง VAT'})</span><span className="font-num">-{formatBaht(totals.discountApplied)}</span></div>
+              )}
+              {includeVat && (
+                <>
+                  <div className="flex justify-between"><span className="text-mutedolive">ยอดก่อน VAT</span><span className="font-num">{formatBaht(totals.taxableBase)}</span></div>
+                  <div className="flex justify-between"><span className="text-mutedolive">VAT 7%</span><span className="font-num">{formatBaht(totals.vatAmount)}</span></div>
+                </>
+              )}
+            </div>
+            <div className="mt-3 px-3.5 py-3 rounded-xl bg-softorange flex items-center justify-between">
+              <span className="font-bold text-sm">ยอดรวมสุทธิ</span>
+              <span className="font-num font-bold text-xl text-vibrant">{formatBaht(totals.grandTotal)}</span>
+            </div>
+          </div>
+
+          <button
+            onClick={() => {
+              const newReceipt = {
+                id: uuid(),
+                storeName: storeName.trim() || 'ร้านค้าทั่วไป',
+                dateIso,
+                items: selected.map((c) => ({ ...c })),
+                includeVat,
+                discountBeforeVat,
+                ...totals,
+                createdAt: Date.now()
+              };
+              updateData((p) => ({
+                ...p,
+                receipts: [newReceipt, ...p.receipts].sort((a, b) => b.dateIso.localeCompare(a.dateIso) || b.createdAt - a.createdAt),
+                cartItems: p.cartItems.filter((c) => !c.isSelected)
+              }));
+              onSaved();
+            }}
+            className="w-full h-12 rounded-2xl bg-olive text-white font-semibold text-sm"
+          >
+            บันทึกใบเสร็จและล้างตะกร้าที่เลือก
+          </button>
+        </div>
+      );
+    }
+
+    // --- Menu 3: Receipt History ---
+    function ReceiptHistoryTab({ data, updateData, showToast }) {
+      const [query, setQuery] = useState('');
+      const [detailId, setDetailId] = useState(null);
+
+      const filtered = useMemo(() => {
+        const q = query.trim().toLowerCase();
+        if (!q) return data.receipts;
+        return data.receipts.filter((r) =>
+          r.storeName.toLowerCase().includes(q) || formatThaiDate(r.dateIso).toLowerCase().includes(q) || r.dateIso.includes(q)
+        );
+      }, [data.receipts, query]);
+
+      const activeDetail = data.receipts.find((r) => r.id === detailId);
+
+      return (
+        <div className="px-4 pt-3 space-y-3">
+          <div className="relative">
+            <Icon name="search" className="w-4 h-4 text-deepolive absolute left-3.5 top-3.5" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="ค้นหาชื่อร้านค้า หรือ วันที่ (เช่น Makro, พ.ย.)"
+              className="w-full h-11 pl-10 pr-4 rounded-2xl bg-white border border-sageborder text-sm focus:outline-none focus:border-olive"
+            />
+          </div>
+
+          {filtered.length === 0 ? (
+            <div className="bg-white rounded-2xl p-8 border border-sageborder text-center text-sm text-mutedolive">
+              {data.receipts.length === 0 ? 'ยังไม่มีประวัติใบเสร็จ' : 'ไม่พบใบเสร็จที่ค้นหา'}
+            </div>
+          ) : (
+            <div className="space-y-2.5">
+              {filtered.map((r) => (
+                <div
+                  key={r.id}
+                  onClick={() => setDetailId(r.id)}
+                  className="bg-white rounded-2xl p-3.5 border border-sageborder flex items-center justify-between cursor-pointer active:scale-[0.99] transition"
+                >
+                  <div>
+                    <div className="font-semibold text-base text-charcoal">{r.storeName}</div>
+                    <div className="text-xs text-mutedolive">{formatThaiDate(r.dateIso)} · {r.items.length} รายการ</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-num font-bold text-base text-vibrant">{formatBaht(r.grandTotal)}</div>
+                    {r.includeVat && <div className="text-[10px] text-deepolive">รวม VAT 7%</div>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {activeDetail && (
+            <ReceiptDetailModal
+              receipt={activeDetail}
+              onClose={() => setDetailId(null)}
+              onSaveEdit={(updated) => {
+                updateData((p) => ({
+                  ...p,
+                  receipts: p.receipts.map((r) => (r.id === updated.id ? updated : r)).sort((a, b) => b.dateIso.localeCompare(a.dateIso))
+                }));
+                showToast('แก้ไขใบเสร็จเรียบร้อย');
+              }}
+              onDelete={() => {
+                updateData((p) => ({ ...p, receipts: p.receipts.filter((r) => r.id !== activeDetail.id) }));
+                setDetailId(null);
+                showToast('ลบใบเสร็จแล้ว');
+              }}
+            />
+          )}
+        </div>
+      );
+    }
+
+    function ReceiptDetailModal({ receipt, onClose, onSaveEdit, onDelete }) {
+      const [isEditing, setIsEditing] = useState(false);
+      const [confirmDelete, setConfirmDelete] = useState(false);
+      const [store, setStore] = useState(receipt.storeName);
+      const [dateIso, setDateIso] = useState(receipt.dateIso);
+      const [items, setItems] = useState(receipt.items);
+      const [vat, setVat] = useState(receipt.includeVat);
+      const [discount, setDiscount] = useState(receipt.discountApplied ? String(receipt.discountApplied) : '');
+      const [beforeVat, setBeforeVat] = useState(receipt.discountBeforeVat);
+
+      const totals = calcReceiptTotals(items, vat, parseFloat(discount) || 0, beforeVat);
+
+      return (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl w-full max-w-md max-h-[88dvh] overflow-y-auto p-5 border border-sageborder">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2"><MueLaLogo size={24} /><h3 className="font-bold text-base text-deepolive">{isEditing ? 'แก้ไขใบเสร็จ' : 'รายละเอียดใบเสร็จ'}</h3></div>
+              <div className="flex items-center gap-1">
+                {!isEditing && (
+                  <>
+                    <button onClick={() => { setConfirmDelete(false); setIsEditing(true); }} className="p-2 text-deepolive" aria-label="แก้ไขใบเสร็จ"><Icon name="edit" className="w-4 h-4" /></button>
+                    <button onClick={() => setConfirmDelete(true)} className="p-2 text-vibrant" aria-label="ลบใบเสร็จ"><Icon name="trash" className="w-4 h-4" /></button>
+                  </>
+                )}
+                <button onClick={onClose} className="p-2 text-mutedolive" aria-label="ปิด"><Icon name="close" className="w-5 h-5" /></button>
+              </div>
+            </div>
+
+            {confirmDelete && !isEditing && (
+              <div className="mb-3 p-3 rounded-2xl bg-softorange border border-vibrant/40 flex items-center justify-between gap-2">
+                <span className="text-xs font-semibold text-vibrant">ยืนยันลบใบเสร็จนี้?</span>
+                <div className="flex gap-1.5">
+                  <button onClick={() => setConfirmDelete(false)} className="px-3 h-8 rounded-lg bg-white text-xs text-mutedolive border border-sageborder">ยกเลิก</button>
+                  <button onClick={onDelete} className="px-3 h-8 rounded-lg bg-vibrant text-white text-xs font-semibold">ลบเลย</button>
+                </div>
+              </div>
+            )}
+
+            {isEditing ? (
+              <div className="space-y-2.5">
+                <input value={store} onChange={(e) => setStore(e.target.value)} placeholder="ชื่อร้านค้า" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm" />
+                <input type="date" value={dateIso} onChange={(e) => setDateIso(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm font-num" />
+                {items.map((it, idx) => (
+                  <div key={it.id} className="p-2.5 rounded-xl bg-mintbg space-y-1.5">
+                    <div className="font-medium text-xs">{it.name}</div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <input type="number" step="0.1" inputMode="decimal" value={it.quantity} onChange={(e) => {
+                        const q = Math.max(0.1, parseFloat(e.target.value) || 0.1);
+                        setItems((prev) => prev.map((x, i) => (i === idx ? { ...x, quantity: q } : x)));
+                      }} className="h-9 px-2 rounded-lg border border-sageborder bg-white text-xs font-num" />
+                      <input type="number" step="0.01" inputMode="decimal" value={it.unitPrice} onChange={(e) => {
+                        const p = Math.max(0, parseFloat(e.target.value) || 0);
+                        setItems((prev) => prev.map((x, i) => (i === idx ? { ...x, unitPrice: p } : x)));
+                      }} className="h-9 px-2 rounded-lg border border-sageborder bg-white text-xs font-num" />
+                    </div>
+                  </div>
+                ))}
+                <label className="flex items-center gap-2 text-xs"><input type="checkbox" checked={vat} onChange={(e) => setVat(e.target.checked)} className="accent-olive" /> VAT 7%</label>
+                <input type="number" step="0.01" inputMode="decimal" value={discount} onChange={(e) => setDiscount(e.target.value)} placeholder="ส่วนลด (บาท)" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm font-num" />
+                {vat && (parseFloat(discount) || 0) > 0 && (
+                  <div className="flex gap-2">
+                    <button onClick={() => setBeforeVat(true)} className={`px-3 py-1.5 rounded-full text-xs border ${beforeVat ? 'bg-deepolive text-white border-deepolive' : 'border-sageborder'}`}>ลดก่อน VAT</button>
+                    <button onClick={() => setBeforeVat(false)} className={`px-3 py-1.5 rounded-full text-xs border ${!beforeVat ? 'bg-deepolive text-white border-deepolive' : 'border-sageborder'}`}>ลดหลัง VAT</button>
+                  </div>
+                )}
+                <div className="flex justify-between text-sm font-bold pt-2"><span>ยอดสุทธิใหม่</span><span className="font-num text-vibrant">{formatBaht(totals.grandTotal)}</span></div>
+                <div className="flex gap-2 pt-2">
+                  <button onClick={() => setIsEditing(false)} className="flex-1 h-10 rounded-xl border border-sageborder text-xs">ยกเลิก</button>
+                  <button onClick={() => { onSaveEdit({ ...receipt, storeName: store.trim() || 'ร้านค้าทั่วไป', dateIso, items, includeVat: vat, discountBeforeVat: beforeVat, ...totals }); setIsEditing(false); }} className="flex-1 h-10 rounded-xl bg-olive text-white text-xs font-semibold">บันทึก</button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="font-bold text-lg">{receipt.storeName}</div>
+                <div className="text-xs text-mutedolive">{formatThaiDate(receipt.dateIso)}</div>
+                <div className="my-3 dashed-divider" />
+                <div className="space-y-1.5">
+                  {receipt.items.map((it) => (
+                    <div key={it.id} className="flex justify-between text-sm">
+                      <div><div>{it.name}</div><div className="text-[11px] text-mutedolive">{formatCompact(it.quantity)} {it.unit} × {formatBaht(it.unitPrice)}</div></div>
+                      <span className="font-num font-semibold">{formatBaht(it.quantity * it.unitPrice)}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="my-3 dashed-divider" />
+                <div className="space-y-1 text-xs">
+                  <div className="flex justify-between"><span className="text-mutedolive">รวมสินค้า</span><span className="font-num">{formatBaht(receipt.subtotal)}</span></div>
+                  {receipt.discountApplied > 0 && <div className="flex justify-between text-olive"><span>ส่วนลด</span><span className="font-num">-{formatBaht(receipt.discountApplied)}</span></div>}
+                  {receipt.includeVat && <div className="flex justify-between"><span className="text-mutedolive">VAT 7%</span><span className="font-num">{formatBaht(receipt.vatAmount)}</span></div>}
+                </div>
+                <div className="mt-3 px-3.5 py-2.5 rounded-xl bg-softorange flex justify-between items-center">
+                  <span className="font-bold text-sm">ยอดรวมสุทธิ</span>
+                  <span className="font-num font-bold text-lg text-vibrant">{formatBaht(receipt.grandTotal)}</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // --- Menu 4: Meal Note ---
+    function MealNoteTab({ data, updateData, showToast }) {
+      const [working, setWorking] = useState([]);
+      const [wholeMode, setWholeMode] = useState(false);
+      const [wholeCount, setWholeCount] = useState(4);
+      const [showReceiptPicker, setShowReceiptPicker] = useState(false);
+      const [showManualModal, setShowManualModal] = useState(false);
+      const [showSavePlanModal, setShowSavePlanModal] = useState(false);
+      const [planTitle, setPlanTitle] = useState('');
+
+      const totalCost = working.reduce((s, i) => s + i.cost, 0);
+      const totalMeals = working.length === 0 ? 0 : wholeMode ? wholeCount : working.reduce((s, i) => s + i.estimatedMeals, 0);
+      const days = totalMeals === 0 ? 0 : totalMeals / Math.max(1, data.mealsPerDay);
+      const costPerMeal = totalMeals === 0 ? 0 : totalCost / totalMeals;
+
+      return (
+        <div className="px-4 pt-4 space-y-3">
+          {/* Baseline Meals/Day */}
+          <div className="bg-white rounded-2xl p-4 border border-sageborder flex items-center justify-between">
+            <div>
+              <div className="font-semibold text-sm text-deepolive">เกณฑ์การกินต่อวัน</div>
+              <div className="text-xs text-mutedolive">ใช้คำนวณจำนวนวันที่วัตถุดิบจะอยู่ได้</div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button onClick={() => updateData({ mealsPerDay: Math.max(1, data.mealsPerDay - 1) })} className="w-9 h-9 rounded-full bg-softsage flex items-center justify-center"><Icon name="minus" className="w-4 h-4" /></button>
+              <span className="font-bold text-sm min-w-[60px] text-center">{data.mealsPerDay} มื้อ/วัน</span>
+              <button onClick={() => updateData({ mealsPerDay: Math.min(10, data.mealsPerDay + 1) })} className="w-9 h-9 rounded-full bg-softolive text-deepolive flex items-center justify-center"><Icon name="plus" className="w-4 h-4" /></button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2.5">
+            <button onClick={() => setShowReceiptPicker(true)} className="h-11 rounded-xl border border-olive text-deepolive font-medium text-xs flex items-center justify-center gap-1.5 bg-white">
+              <Icon name="receipt" className="w-4 h-4" />
+              <span>ดึงจากใบเสร็จ</span>
+            </button>
+            <button onClick={() => setShowManualModal(true)} className="h-11 rounded-xl bg-olive text-white font-medium text-xs flex items-center justify-center gap-1.5">
+              <Icon name="plus" className="w-4 h-4" />
+              <span>เพิ่มวัตถุดิบเอง</span>
+            </button>
+          </div>
+
+          {working.length > 0 && (
+            <>
+              <div className="bg-white rounded-2xl p-3.5 border border-sageborder space-y-2.5">
+                <div className="flex gap-2">
+                  <button onClick={() => setWholeMode(false)} className={`px-3 py-1.5 rounded-full text-xs border ${!wholeMode ? 'bg-olive text-white border-olive' : 'border-sageborder'}`}>ระบุรายวัตถุดิบ</button>
+                  <button onClick={() => setWholeMode(true)} className={`px-3 py-1.5 rounded-full text-xs border ${wholeMode ? 'bg-olive text-white border-olive' : 'border-sageborder'}`}>แบ่งรวมทั้งชุด</button>
+                </div>
+                {wholeMode && (
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-xs">ชุดนี้กินได้รวมทั้งหมด</span>
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => setWholeCount((c) => Math.max(1, c - 1))} className="w-8 h-8 rounded-full bg-softsage flex items-center justify-center"><Icon name="minus" className="w-3.5 h-3.5" /></button>
+                      <span className="font-bold text-sm text-deepolive">{wholeCount} มื้อ</span>
+                      <button onClick={() => setWholeCount((c) => c + 1)} className="w-8 h-8 rounded-full bg-softolive text-deepolive flex items-center justify-center"><Icon name="plus" className="w-3.5 h-3.5" /></button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {working.map((ing) => (
+                <div key={ing.id} className="bg-white rounded-2xl px-3.5 py-2.5 border border-sageborder flex items-center justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <div className="font-semibold text-sm truncate">{ing.name}</div>
+                    <div className="text-xs text-deepolive font-num">{formatBaht(ing.cost)} <span className="text-mutedolive font-prompt">· {ing.source}</span></div>
+                  </div>
+                  {!wholeMode && (
+                    <div className="flex items-center gap-1.5">
+                      <button onClick={() => setWorking((p) => p.map((x) => x.id === ing.id ? { ...x, estimatedMeals: Math.max(1, x.estimatedMeals - 1) } : x))} className="w-7 h-7 rounded-full bg-softsage flex items-center justify-center"><Icon name="minus" className="w-3 h-3" /></button>
+                      <span className="text-xs font-medium min-w-[44px] text-center">{ing.estimatedMeals} มื้อ</span>
+                      <button onClick={() => setWorking((p) => p.map((x) => x.id === ing.id ? { ...x, estimatedMeals: x.estimatedMeals + 1 } : x))} className="w-7 h-7 rounded-full bg-softolive text-deepolive flex items-center justify-center"><Icon name="plus" className="w-3 h-3" /></button>
+                    </div>
+                  )}
+                  <button onClick={() => setWorking((p) => p.filter((x) => x.id !== ing.id))} className="p-1.5 text-vibrant"><Icon name="trash" className="w-4 h-4" /></button>
+                </div>
+              ))}
+
+              <div className="bg-white rounded-2xl p-4 border-2 border-olive space-y-3">
+                <div className="font-bold text-sm text-deepolive">ผลคำนวณต้นทุนมื้ออาหาร</div>
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <div className="p-2.5 rounded-xl bg-mintbg"><div className="text-[11px] text-mutedolive">กินได้ทั้งหมด</div><div className="font-num font-bold text-sm text-deepolive">{totalMeals} มื้อ</div></div>
+                  <div className="p-2.5 rounded-xl bg-mintbg"><div className="text-[11px] text-mutedolive">กินได้นาน</div><div className="font-num font-bold text-sm text-deepolive">{formatCompact(days)} วัน</div></div>
+                  <div className="p-2.5 rounded-xl bg-softorange"><div className="text-[11px] text-mutedolive">เฉลี่ยมื้อละ</div><div className="font-num font-bold text-sm text-vibrant">{formatBaht(costPerMeal)}</div></div>
+                </div>
+                <button
+                  onClick={() => { setPlanTitle(''); setShowSavePlanModal(true); }}
+                  className="w-full h-11 rounded-xl bg-vibrant text-white font-semibold text-sm"
+                >
+                  สรุปมื้ออาหาร (บันทึกการ์ด)
+                </button>
+              </div>
+            </>
+          )}
+
+          {data.mealPlans.length > 0 && (
+            <div className="space-y-2.5 pt-2">
+              <div className="font-bold text-sm text-deepolive">ประวัติการ์ดสรุปมื้ออาหาร ({data.mealPlans.length})</div>
+              {data.mealPlans.map((pl) => (
+                <div key={pl.id} className="bg-white rounded-2xl p-4 border border-deepolive/40">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2"><MueLaLogo size={22} /><span className="font-bold text-sm">{pl.title}</span></div>
+                    <button onClick={() => updateData((p) => ({ ...p, mealPlans: p.mealPlans.filter((x) => x.id !== pl.id) }))} className="text-vibrant p-1"><Icon name="trash" className="w-4 h-4" /></button>
+                  </div>
+                  <div className="my-2.5 dashed-divider" />
+                  {pl.ingredients.map((ing) => (
+                    <div key={ing.id} className="flex justify-between text-xs py-0.5">
+                      <span>• {ing.name}</span>
+                      <span className="font-num text-mutedolive">{formatBaht(ing.cost)}</span>
+                    </div>
+                  ))}
+                  <div className="my-2.5 dashed-divider" />
+                  <div className="flex justify-between items-center">
+                    <div className="text-xs text-mutedolive">รวม {formatBaht(pl.totalCost)} · {pl.totalMeals} มื้อ · อยู่ได้ {formatCompact(pl.estimatedDays)} วัน</div>
+                    <div className="px-2.5 py-1 rounded-lg bg-softorange text-right">
+                      <div className="text-[10px] text-mutedolive">เฉลี่ยมื้อละ</div>
+                      <div className="font-num font-bold text-sm text-vibrant">{formatBaht(pl.costPerMeal)}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {showReceiptPicker && (
+            <div className="fixed inset-0 z-50 bg-black/40 flex items-end sm:items-center justify-center">
+              <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 max-h-[75dvh] overflow-y-auto space-y-2.5">
+                <div className="flex justify-between items-center mb-1"><h3 className="font-bold text-base text-deepolive">เลือกใบเสร็จที่ต้องการนำเข้า</h3><button onClick={() => setShowReceiptPicker(false)}><Icon name="close" className="w-5 h-5" /></button></div>
+                {data.receipts.length === 0 ? <div className="text-sm text-mutedolive py-4">ยังไม่มีใบเสร็จที่บันทึกไว้</div> : data.receipts.map((r) => (
+                  <div
+                    key={r.id}
+                    onClick={() => {
+                      const sub = r.items.reduce((s, i) => s + i.quantity * i.unitPrice, 0) || 1;
+                      const ratio = r.subtotal > 0 ? r.grandTotal / sub : 1;
+                      const imported = r.items.map((it) => ({
+                        id: uuid(),
+                        name: it.name,
+                        cost: Math.round(it.quantity * it.unitPrice * ratio * 100) / 100,
+                        estimatedMeals: 2,
+                        source: r.storeName
+                      }));
+                      setWorking((prev) => [...prev, ...imported]);
+                      setShowReceiptPicker(false);
+                      showToast(`ดึงวัตถุดิบ ${imported.length} รายการจาก ${r.storeName}`);
+                    }}
+                    className="p-3 rounded-xl bg-mintbg border border-sageborder flex justify-between items-center cursor-pointer"
+                  >
+                    <div><div className="font-semibold text-sm">{r.storeName}</div><div className="text-xs text-mutedolive">{formatThaiDate(r.dateIso)} · {r.items.length} รายการ</div></div>
+                    <span className="font-num font-bold text-sm text-vibrant">{formatBaht(r.grandTotal)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {showManualModal && (
+            <ManualIngredientModal
+              onClose={() => setShowManualModal(false)}
+              onAdd={(name, cost, meals) => {
+                setWorking((prev) => [...prev, { id: uuid(), name, cost, estimatedMeals: meals, source: 'เพิ่มเอง' }]);
+                setShowManualModal(false);
+              }}
+            />
+          )}
+
+          {showSavePlanModal && (
+            <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+              <div className="bg-white rounded-2xl w-full max-w-xs p-5 border border-sageborder space-y-3">
+                <h3 className="font-bold text-base text-deepolive">บันทึกการ์ดสรุปมื้ออาหาร</h3>
+                <p className="text-xs text-mutedolive">ตั้งชื่อชุดอาหาร (หรือเว้นว่างเพื่อใช้วันที่ปัจจุบัน)</p>
+                <input
+                  value={planTitle}
+                  onChange={(e) => setPlanTitle(e.target.value)}
+                  placeholder={`สรุปมื้ออาหาร ${formatThaiDate(todayISO())}`}
+                  className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm"
+                />
+                <div className="flex justify-end gap-2 pt-1">
+                  <button onClick={() => setShowSavePlanModal(false)} className="px-4 h-10 text-sm text-mutedolive">ยกเลิก</button>
+                  <button
+                    onClick={() => {
+                      const plan = {
+                        id: uuid(),
+                        title: planTitle.trim() || `สรุปมื้ออาหาร ${formatThaiDate(todayISO())}`,
+                        mealsPerDay: data.mealsPerDay,
+                        ingredients: working,
+                        totalCost,
+                        totalMeals,
+                        estimatedDays: days,
+                        costPerMeal
+                      };
+                      updateData((p) => ({ ...p, mealPlans: [plan, ...p.mealPlans] }));
+                      setWorking([]);
+                      setShowSavePlanModal(false);
+                      showToast('บันทึกการ์ดสรุปมื้ออาหารเรียบร้อย');
+                    }}
+                    className="px-4 h-10 rounded-xl bg-vibrant text-white text-sm font-semibold"
+                  >
+                    บันทึกการ์ด
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    function ManualIngredientModal({ onClose, onAdd }) {
+      const [name, setName] = useState('');
+      const [cost, setCost] = useState('');
+      const [meals, setMeals] = useState('2');
+      return (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-xs p-5 border border-sageborder space-y-3">
+            <h3 className="font-bold text-base text-deepolive">เพิ่มวัตถุดิบด้วยตัวเอง</h3>
+            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="ชื่อวัตถุดิบ" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm" />
+            <input type="number" inputMode="decimal" value={cost} onChange={(e) => setCost(e.target.value)} placeholder="ราคา / ต้นทุน (บาท)" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm font-num" />
+            <input type="number" inputMode="numeric" value={meals} onChange={(e) => setMeals(e.target.value)} placeholder="จำนวนมื้อที่แบ่งกินได้" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm font-num" />
+            <div className="flex justify-end gap-2">
+              <button onClick={onClose} className="px-4 h-10 text-sm text-mutedolive">ยกเลิก</button>
+              <button onClick={() => { if (name.trim()) onAdd(name.trim(), Math.max(0, parseFloat(cost) || 0), Math.max(1, parseInt(meals) || 1)); }} className="px-4 h-10 rounded-xl bg-olive text-white text-sm font-semibold">เพิ่ม</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // --- Menu 5: Weekly Food ---
+    function WeeklyFoodTab({ data, updateData, showToast }) {
+      const [subTab, setSubTab] = useState('ACTIVE');
+      const [slotTarget, setSlotTarget] = useState(null); // { dayIndex, slotKey, slotLabel, entry }
+      const [historyDetail, setHistoryDetail] = useState(null);
+
+      const today = todayISO();
+      const days = data.weeklyDays;
+      const todayRec = days.find((d) => d.dateIso === today);
+      const todayTotal = todayRec ? (todayRec.meal1.cost + todayRec.meal2.cost + todayRec.snack.cost) : (days[0] ? days[0].meal1.cost + days[0].meal2.cost + days[0].snack.cost : 0);
+
+      const totalMeals = days.reduce((s, d) => s + [d.meal1, d.meal2, d.snack].filter((m) => m.name || m.cost > 0).length, 0);
+      const weekTotal = days.reduce((s, d) => s + d.meal1.cost + d.meal2.cost + d.snack.cost, 0);
+      const avgMeal = totalMeals > 0 ? weekTotal / totalMeals : 0;
+
+      return (
+        <div>
+          <div className="bg-white border-b border-sageborder grid grid-cols-2">
+            <button onClick={() => setSubTab('ACTIVE')} className={`h-11 text-sm ${subTab === 'ACTIVE' ? 'border-b-2 border-olive text-deepolive font-semibold' : 'text-mutedolive'}`}>ตารางสัปดาห์นี้</button>
+            <button onClick={() => setSubTab('HISTORY')} className={`h-11 text-sm ${subTab === 'HISTORY' ? 'border-b-2 border-olive text-deepolive font-semibold' : 'text-mutedolive'}`}>คลังประวัติ ({data.weeklyHistory.length})</button>
+          </div>
+
+          {subTab === 'ACTIVE' ? (
+            <div className="px-4 pt-3 space-y-3">
+              <div className="bg-white rounded-2xl p-4 border border-sageborder space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div>
+                    <div className="font-semibold text-sm text-deepolive">สัปดาห์ 7 วัน</div>
+                    <div className="text-xs text-mutedolive">{formatThaiDate(data.weeklyStartIso)} - {formatThaiDate(addDaysISO(data.weeklyStartIso, 6))}</div>
+                  </div>
+                  <input
+                    type="date"
+                    value={data.weeklyStartIso}
+                    onChange={(e) => {
+                      const start = e.target.value;
+                      if (!start) return;
+                      updateData((p) => ({
+                        ...p,
+                        weeklyStartIso: start,
+                        weeklyDays: p.weeklyDays.map((d, idx) => ({ ...d, dateIso: addDaysISO(start, idx) }))
+                      }));
+                    }}
+                    className="h-10 px-2.5 rounded-xl border border-olive text-xs font-num text-deepolive"
+                  />
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <div className="p-2.5 rounded-xl bg-mintbg"><div className="text-[10.5px] text-mutedolive">{todayRec ? 'วันนี้กินไป' : 'วันแรก'}</div><div className="font-num font-bold text-sm text-deepolive">{formatBaht(todayTotal)}</div></div>
+                  <div className="p-2.5 rounded-xl bg-mintbg"><div className="text-[10.5px] text-mutedolive">เฉลี่ยมื้อละ</div><div className="font-num font-bold text-sm text-deepolive">{formatBaht(avgMeal)}</div></div>
+                  <div className="p-2.5 rounded-xl bg-softorange"><div className="text-[10.5px] text-mutedolive">สะสมสัปดาห์</div><div className="font-num font-bold text-sm text-vibrant">{formatBaht(weekTotal)}</div></div>
+                </div>
+              </div>
+
+              {days.map((d) => {
+                const daySum = d.meal1.cost + d.meal2.cost + d.snack.cost;
+                const isToday = d.dateIso === today;
+                return (
+                  <div key={d.dayIndex} className={`bg-white rounded-2xl p-3.5 border ${isToday ? 'border-olive' : 'border-sageborder'}`}>
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center gap-1.5">
+                        <span className={`font-bold text-sm ${isToday ? 'text-deepolive' : 'text-charcoal'}`}>{formatThaiDayDate(d.dateIso)}</span>
+                        {isToday && <span className="px-1.5 py-0.5 rounded bg-softolive text-deepolive text-[10px] font-semibold">วันนี้</span>}
+                      </div>
+                      <span className={`font-num font-bold text-sm ${daySum > 0 ? 'text-vibrant' : 'text-mutedolive'}`}>{formatBaht(daySum)}</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { key: 'meal1', label: 'มื้อที่ 1', entry: d.meal1 },
+                        { key: 'meal2', label: 'มื้อที่ 2', entry: d.meal2 },
+                        { key: 'snack', label: 'ของว่าง', entry: d.snack }
+                      ].map((slot) => {
+                        const logged = slot.entry.name || slot.entry.cost > 0;
+                        return (
+                          <button
+                            key={slot.key}
+                            onClick={() => setSlotTarget({ dayIndex: d.dayIndex, dateIso: d.dateIso, slotKey: slot.key, slotLabel: slot.label, entry: slot.entry })}
+                            className={`h-[70px] p-2 rounded-xl border text-left flex flex-col justify-between ${
+                              logged ? 'bg-softolive border-olive/60' : 'bg-mintbg border-sageborder'
+                            }`}
+                          >
+                            <span className="text-[10px] text-mutedolive">{slot.label}</span>
+                            {logged ? (
+                              <div>
+                                <div className="text-[11px] font-semibold truncate">{slot.entry.name || 'มื้ออาหาร'}</div>
+                                <div className="font-num font-bold text-xs text-deepolive">{formatBaht(slot.entry.cost)}</div>
+                              </div>
+                            ) : (
+                              <span className="text-xs text-olive font-medium">+ บันทึก</span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+
+              <button
+                onClick={() => {
+                  if (totalMeals === 0) return showToast('ยังไม่มีรายการมื้ออาหารที่บันทึกในสัปดาห์นี้');
+                  const hist = {
+                    id: uuid(),
+                    weekStartIso: data.weeklyStartIso,
+                    weekEndIso: addDaysISO(data.weeklyStartIso, 6),
+                    days,
+                    totalMeals,
+                    totalSpent: weekTotal,
+                    avgCostPerMeal: avgMeal
+                  };
+                  updateData((p) => ({
+                    ...p,
+                    weeklyHistory: [hist, ...p.weeklyHistory],
+                    weeklyDays: buildEmptyWeek(p.weeklyStartIso)
+                  }));
+                  showToast('บันทึกสัปดาห์เข้าสู่คลังประวัติแล้ว');
+                }}
+                className="w-full h-12 rounded-2xl bg-vibrant text-white font-semibold text-sm"
+              >
+                บันทึกสัปดาห์นี้เข้าสู่คลังประวัติ
+              </button>
+            </div>
+          ) : (
+            <div className="px-4 pt-3 space-y-2.5">
+              {data.weeklyHistory.length === 0 ? (
+                <div className="bg-white rounded-2xl p-8 border border-sageborder text-center text-sm text-mutedolive">ยังไม่มีประวัติรายสัปดาห์</div>
+              ) : data.weeklyHistory.map((h) => (
+                <div key={h.id} onClick={() => setHistoryDetail(h)} className="bg-white rounded-2xl p-3.5 border border-sageborder flex justify-between items-center cursor-pointer">
+                  <div>
+                    <div className="font-semibold text-sm">{formatThaiDayDate(h.weekStartIso)} - {formatThaiDayDate(h.weekEndIso)}</div>
+                    <div className="text-xs text-mutedolive">กินทั้งหมด {h.totalMeals} มื้อ · เฉลี่ย {formatBaht(h.avgCostPerMeal)}/มื้อ</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-num font-bold text-base text-vibrant">{formatBaht(h.totalSpent)}</span>
+                    <button onClick={(e) => { e.stopPropagation(); updateData((p) => ({ ...p, weeklyHistory: p.weeklyHistory.filter((x) => x.id !== h.id) })); }} className="p-1.5 text-mutedolive"><Icon name="trash" className="w-4 h-4" /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {slotTarget && (
+            <LogSlotModal
+              target={slotTarget}
+              mealPlans={data.mealPlans}
+              onClose={() => setSlotTarget(null)}
+              onSave={(entry) => {
+                updateData((p) => ({
+                  ...p,
+                  weeklyDays: p.weeklyDays.map((d) => d.dayIndex === slotTarget.dayIndex ? { ...d, [slotTarget.slotKey]: entry } : d)
+                }));
+                setSlotTarget(null);
+              }}
+            />
+          )}
+
+          {historyDetail && (
+            <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+              <div className="bg-white rounded-3xl w-full max-w-md max-h-[85dvh] overflow-y-auto p-5 border border-sageborder">
+                <div className="flex justify-between items-center mb-2">
+                  <div className="flex items-center gap-2"><MueLaLogo size={24} /><h3 className="font-bold text-base text-deepolive">สรุปการกินรายสัปดาห์</h3></div>
+                  <button onClick={() => setHistoryDetail(null)}><Icon name="close" className="w-5 h-5" /></button>
+                </div>
+                <div className="text-xs text-mutedolive">{formatThaiDate(historyDetail.weekStartIso)} - {formatThaiDate(historyDetail.weekEndIso)}</div>
+                <div className="my-3 dashed-divider" />
+                <div className="space-y-2">
+                  {historyDetail.days.map((d) => {
+                    const sum = d.meal1.cost + d.meal2.cost + d.snack.cost;
+                    const txt = [d.meal1, d.meal2, d.snack].filter((m) => m.name || m.cost > 0).map((m) => `${m.name} (${formatBaht(m.cost)})`).join(' · ');
+                    return (
+                      <div key={d.dayIndex} className="flex justify-between items-start text-xs">
+                        <div><div className="font-semibold">{formatThaiDayDate(d.dateIso)}</div><div className="text-mutedolive">{txt || 'ไม่มีรายการ'}</div></div>
+                        <span className="font-num font-semibold text-deepolive">{formatBaht(sum)}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="my-3 dashed-divider" />
+                <div className="px-3.5 py-2.5 rounded-xl bg-softorange flex justify-between items-center">
+                  <span className="font-bold text-sm">ยอดรวมทั้งสัปดาห์ ({historyDetail.totalMeals} มื้อ)</span>
+                  <span className="font-num font-bold text-lg text-vibrant">{formatBaht(historyDetail.totalSpent)}</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    function LogSlotModal({ target, mealPlans, onClose, onSave }) {
+      const [mode, setMode] = useState(mealPlans.length > 0 && !target.entry.name ? 'PLAN' : 'CUSTOM');
+      const [name, setName] = useState(target.entry.name || '');
+      const [cost, setCost] = useState(target.entry.cost > 0 ? String(target.entry.cost) : '');
+
+      return (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl w-full max-w-sm p-5 border border-sageborder space-y-3">
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold text-base text-deepolive">{target.slotLabel} · {formatThaiDayDate(target.dateIso)}</h3>
+              <button onClick={onClose}><Icon name="close" className="w-5 h-5" /></button>
+            </div>
+            <div className="flex gap-2">
+              <button onClick={() => setMode('PLAN')} className={`px-3 py-1.5 rounded-full text-xs border ${mode === 'PLAN' ? 'bg-olive text-white border-olive' : 'border-sageborder'}`}>ดึงจาก Meal Note</button>
+              <button onClick={() => setMode('CUSTOM')} className={`px-3 py-1.5 rounded-full text-xs border ${mode === 'CUSTOM' ? 'bg-olive text-white border-olive' : 'border-sageborder'}`}>กรอกเอง</button>
+            </div>
+            {mode === 'PLAN' ? (
+              <div className="max-h-56 overflow-y-auto space-y-2">
+                {mealPlans.length === 0 ? <div className="text-xs text-mutedolive">ยังไม่มีการ์ดสรุปจาก Meal Note — เลือก "กรอกเอง" ได้ทันที</div> : mealPlans.map((pl) => (
+                  <div
+                    key={pl.id}
+                    onClick={() => onSave({ name: pl.title, cost: Math.round(pl.costPerMeal * 100) / 100 })}
+                    className="p-3 rounded-xl bg-mintbg border border-sageborder flex justify-between items-center cursor-pointer"
+                  >
+                    <div><div className="font-semibold text-sm">{pl.title}</div><div className="text-[11px] text-mutedolive">{pl.totalMeals} มื้อ</div></div>
+                    <span className="font-num font-bold text-xs text-vibrant">{formatBaht(pl.costPerMeal)}/มื้อ</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-2.5">
+                <input value={name} onChange={(e) => setName(e.target.value)} placeholder="ชื่อเมนูอาหาร" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm" />
+                <input type="number" step="0.01" inputMode="decimal" value={cost} onChange={(e) => setCost(e.target.value)} placeholder="ราคา (บาท)" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm font-num" />
+                <div className="flex gap-2">
+                  {(target.entry.name || target.entry.cost > 0) && (
+                    <button onClick={() => onSave({ name: '', cost: 0 })} className="flex-1 h-10 rounded-xl border border-vibrant text-vibrant text-xs font-medium">ล้างช่อง</button>
+                  )}
+                  <button onClick={() => onSave({ name: name.trim() || target.slotLabel, cost: Math.max(0, parseFloat(cost) || 0) })} className="flex-[1.5] h-10 rounded-xl bg-olive text-white text-xs font-semibold">บันทึกมื้อนี้</button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
