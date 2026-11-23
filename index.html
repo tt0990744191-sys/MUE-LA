@@ -1978,6 +1978,16 @@
     }
 
     // --- Menu 4: Meal Note ---
+    const stepMealDownByOne = (cur) => {
+      if (cur <= 1) return 1;
+      const frac = cur - Math.floor(cur);
+      return frac > 0.001 ? Math.max(1, Math.floor(cur)) : Math.max(1, Math.round(cur) - 1);
+    };
+    const stepMealUpByOne = (cur) => {
+      if (cur < 1) return 1;
+      return Math.floor(cur) + 1;
+    };
+
     function MealNoteTab({ data, updateData, showToast }) {
       const [working, setWorking] = useState([]);
       const [wholeMode, setWholeMode] = useState(false);
@@ -1986,11 +1996,14 @@
       const [showManualModal, setShowManualModal] = useState(false);
       const [showSavePlanModal, setShowSavePlanModal] = useState(false);
       const [planTitle, setPlanTitle] = useState('');
+      const [planDateIso, setPlanDateIso] = useState(todayISO());
+      const [fractionModal, setFractionModal] = useState(null); // { title, initial, initialNote, allowNote, onConfirm }
 
       const totalCost = working.reduce((s, i) => s + i.cost, 0);
-      const totalMeals = working.length === 0 ? 0 : wholeMode ? wholeCount : working.reduce((s, i) => s + i.estimatedMeals, 0);
+      const totalMeals = working.length === 0 ? 0 : wholeMode ? Math.max(1, wholeCount) : Math.max(0.1, working.reduce((s, i) => s + i.estimatedMeals, 0));
       const days = totalMeals === 0 ? 0 : totalMeals / Math.max(1, data.mealsPerDay);
       const costPerMeal = totalMeals === 0 ? 0 : totalCost / totalMeals;
+      const costPerDay = costPerMeal * Math.max(1, data.mealsPerDay);
 
       return (
         <div className="px-4 pt-4 space-y-3">
@@ -1998,21 +2011,21 @@
           <div className="bg-white rounded-2xl p-4 border border-sageborder flex items-center justify-between">
             <div>
               <div className="font-semibold text-sm text-deepolive">เกณฑ์การกินต่อวัน</div>
-              <div className="text-xs text-mutedolive">ใช้คำนวณจำนวนวันที่วัตถุดิบจะอยู่ได้</div>
+              <div className="text-xs text-mutedolive">ใช้คำนวณจำนวนวันและค่าเฉลี่ยต่อวัน</div>
             </div>
             <div className="flex items-center gap-2">
-              <button onClick={() => updateData({ mealsPerDay: Math.max(1, data.mealsPerDay - 1) })} className="w-9 h-9 rounded-full bg-softsage flex items-center justify-center"><Icon name="minus" className="w-4 h-4" /></button>
+              <button onClick={() => updateData({ mealsPerDay: Math.max(1, data.mealsPerDay - 1) })} className="w-10 h-10 rounded-full bg-softsage flex items-center justify-center"><Icon name="minus" className="w-4 h-4" /></button>
               <span className="font-bold text-sm min-w-[60px] text-center">{data.mealsPerDay} มื้อ/วัน</span>
-              <button onClick={() => updateData({ mealsPerDay: Math.min(10, data.mealsPerDay + 1) })} className="w-9 h-9 rounded-full bg-softolive text-deepolive flex items-center justify-center"><Icon name="plus" className="w-4 h-4" /></button>
+              <button onClick={() => updateData({ mealsPerDay: Math.min(10, data.mealsPerDay + 1) })} className="w-10 h-10 rounded-full bg-softolive text-deepolive flex items-center justify-center"><Icon name="plus" className="w-4 h-4" /></button>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-2.5">
-            <button onClick={() => setShowReceiptPicker(true)} className="h-11 rounded-xl border border-olive text-deepolive font-medium text-xs flex items-center justify-center gap-1.5 bg-white">
+            <button onClick={() => setShowReceiptPicker(true)} className="h-12 rounded-xl border border-olive text-deepolive font-medium text-xs flex items-center justify-center gap-1.5 bg-white">
               <Icon name="receipt" className="w-4 h-4" />
               <span>ดึงจากใบเสร็จ</span>
             </button>
-            <button onClick={() => setShowManualModal(true)} className="h-11 rounded-xl bg-olive text-white font-medium text-xs flex items-center justify-center gap-1.5">
+            <button onClick={() => setShowManualModal(true)} className="h-12 rounded-xl bg-olive text-white font-medium text-xs flex items-center justify-center gap-1.5">
               <Icon name="plus" className="w-4 h-4" />
               <span>เพิ่มวัตถุดิบเอง</span>
             </button>
@@ -2021,6 +2034,7 @@
           {working.length > 0 && (
             <>
               <div className="bg-white rounded-2xl p-3.5 border border-sageborder space-y-2.5">
+                <div className="text-xs font-semibold text-deepolive">วิธีระบุจำนวนมื้อ (กด + / - เพิ่มทีละ 1 มื้อ หรือระบุเศษพร้อมรายละเอียด)</div>
                 <div className="flex gap-2">
                   <button onClick={() => setWholeMode(false)} className={`px-3 py-1.5 rounded-full text-xs border ${!wholeMode ? 'bg-olive text-white border-olive' : 'border-sageborder'}`}>ระบุรายวัตถุดิบ</button>
                   <button onClick={() => setWholeMode(true)} className={`px-3 py-1.5 rounded-full text-xs border ${wholeMode ? 'bg-olive text-white border-olive' : 'border-sageborder'}`}>แบ่งรวมทั้งชุด</button>
@@ -2028,44 +2042,100 @@
                 {wholeMode && (
                   <div className="flex items-center justify-between pt-1">
                     <span className="text-xs">ชุดนี้กินได้รวมทั้งหมด</span>
-                    <div className="flex items-center gap-2">
-                      <button onClick={() => setWholeCount((c) => Math.max(1, c - 1))} className="w-8 h-8 rounded-full bg-softsage flex items-center justify-center"><Icon name="minus" className="w-3.5 h-3.5" /></button>
-                      <span className="font-bold text-sm text-deepolive">{wholeCount} มื้อ</span>
-                      <button onClick={() => setWholeCount((c) => c + 1)} className="w-8 h-8 rounded-full bg-softolive text-deepolive flex items-center justify-center"><Icon name="plus" className="w-3.5 h-3.5" /></button>
+                    <div className="flex items-center gap-1.5">
+                      <button onClick={() => setWholeCount((c) => stepMealDownByOne(c))} className="w-9 h-9 rounded-full bg-softsage flex items-center justify-center"><Icon name="minus" className="w-3.5 h-3.5" /></button>
+                      <button onClick={() => setFractionModal({ title: 'จำนวนมื้อรวมทั้งชุด', initial: wholeCount, initialNote: '', allowNote: false, onConfirm: (v) => setWholeCount(v) })} className="px-3 py-1.5 rounded-lg bg-softolive text-deepolive font-bold text-xs">
+                        {formatCompact(wholeCount)} มื้อ
+                      </button>
+                      <button onClick={() => setWholeCount((c) => stepMealUpByOne(c))} className="w-9 h-9 rounded-full bg-softolive text-deepolive flex items-center justify-center"><Icon name="plus" className="w-3.5 h-3.5" /></button>
                     </div>
                   </div>
                 )}
               </div>
 
-              {working.map((ing) => (
-                <div key={ing.id} className="bg-white rounded-2xl px-3.5 py-2.5 border border-sageborder flex items-center justify-between gap-2">
-                  <div className="min-w-0 flex-1">
-                    <div className="font-semibold text-sm truncate">{ing.name}</div>
-                    <div className="text-xs text-deepolive font-num">{formatBaht(ing.cost)} <span className="text-mutedolive font-prompt">· {ing.source}</span></div>
-                  </div>
-                  {!wholeMode && (
-                    <div className="flex items-center gap-1.5">
-                      <button onClick={() => setWorking((p) => p.map((x) => x.id === ing.id ? { ...x, estimatedMeals: Math.max(1, x.estimatedMeals - 1) } : x))} className="w-7 h-7 rounded-full bg-softsage flex items-center justify-center"><Icon name="minus" className="w-3 h-3" /></button>
-                      <span className="text-xs font-medium min-w-[44px] text-center">{ing.estimatedMeals} มื้อ</span>
-                      <button onClick={() => setWorking((p) => p.map((x) => x.id === ing.id ? { ...x, estimatedMeals: x.estimatedMeals + 1 } : x))} className="w-7 h-7 rounded-full bg-softolive text-deepolive flex items-center justify-center"><Icon name="plus" className="w-3 h-3" /></button>
+              {working.map((ing) => {
+                const isFrac = !wholeMode && ing.estimatedMeals < 1;
+                const ingPerMeal = isFrac ? ing.cost : ing.cost / Math.max(0.1, ing.estimatedMeals);
+                const openFracModal = (prefillMeals = ing.estimatedMeals) => setFractionModal({
+                  title: `ระบุมื้อ / เศษของ ${ing.name}`,
+                  initial: prefillMeals,
+                  initialNote: ing.fractionNote || '',
+                  allowNote: true,
+                  onConfirm: (v, note) => setWorking((p) => p.map((x) => x.id === ing.id ? { ...x, estimatedMeals: v, fractionNote: v < 1 ? (note || '') : '' } : x))
+                });
+                return (
+                  <div key={ing.id} className={`bg-white rounded-2xl px-3.5 py-3 border ${isFrac ? 'border-vibrant/50' : 'border-sageborder'} space-y-2`}>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="min-w-0 flex-1">
+                        <div className="font-semibold text-sm truncate">{ing.name}</div>
+                        <div className="text-xs text-deepolive font-num">
+                          {formatBaht(ing.cost)}
+                          {!wholeMode && <span className="text-vibrant font-prompt font-semibold"> · ตกมื้อละ {formatBaht(ingPerMeal)}</span>}
+                        </div>
+                        {ing.source && <div className="text-[11px] text-mutedolive">ที่มา: {ing.source}</div>}
+                      </div>
+                      {!wholeMode && (
+                        <div className="flex items-center gap-1">
+                          <button onClick={() => setWorking((p) => p.map((x) => {
+                            if (x.id !== ing.id) return x;
+                            const next = stepMealDownByOne(x.estimatedMeals);
+                            return { ...x, estimatedMeals: next, fractionNote: next >= 1 ? '' : x.fractionNote };
+                          }))} className="w-9 h-9 rounded-full bg-softsage flex items-center justify-center"><Icon name="minus" className="w-3.5 h-3.5" /></button>
+                          <button
+                            onClick={() => openFracModal(ing.estimatedMeals)}
+                            className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold border ${isFrac ? 'bg-softorange text-vibrant border-vibrant/40' : 'bg-mintbg text-deepolive border-sageborder'}`}
+                          >
+                            {formatCompact(ing.estimatedMeals)} มื้อ
+                          </button>
+                          <button onClick={() => setWorking((p) => p.map((x) => {
+                            if (x.id !== ing.id) return x;
+                            const next = stepMealUpByOne(x.estimatedMeals);
+                            return { ...x, estimatedMeals: next, fractionNote: '' };
+                          }))} className="w-9 h-9 rounded-full bg-softolive text-deepolive flex items-center justify-center"><Icon name="plus" className="w-3.5 h-3.5" /></button>
+                        </div>
+                      )}
+                      <button onClick={() => setWorking((p) => p.filter((x) => x.id !== ing.id))} className="p-1.5 text-vibrant"><Icon name="trash" className="w-4 h-4" /></button>
                     </div>
-                  )}
-                  <button onClick={() => setWorking((p) => p.filter((x) => x.id !== ing.id))} className="p-1.5 text-vibrant"><Icon name="trash" className="w-4 h-4" /></button>
-                </div>
-              ))}
+                    {!wholeMode && (
+                      <button
+                        onClick={() => openFracModal(isFrac ? ing.estimatedMeals : 0.5)}
+                        className={`w-full text-left px-2.5 py-1.5 rounded-xl text-[11px] border flex items-center justify-between gap-2 ${
+                          isFrac
+                            ? 'bg-softorange text-vibrant border-vibrant/30 font-medium'
+                            : 'bg-mintbg text-deepolive border-sageborder/80'
+                        }`}
+                      >
+                        <span className="truncate">
+                          {isFrac
+                            ? `เป็นเศษ (${formatCompact(ing.estimatedMeals)} มื้อ)${ing.fractionNote ? `: ${ing.fractionNote}` : ' · แตะพิมพ์รายละเอียด'}`
+                            : 'ตั้งเป็นเศษ (< 1 มื้อ) + พิมพ์รายละเอียด'}
+                        </span>
+                        <span className="shrink-0 font-semibold">{isFrac ? 'แก้ไข' : 'ตั้งค่า'}</span>
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
 
               <div className="bg-white rounded-2xl p-4 border-2 border-olive space-y-3">
-                <div className="font-bold text-sm text-deepolive">ผลคำนวณต้นทุนมื้ออาหาร</div>
-                <div className="grid grid-cols-3 gap-2 text-center">
-                  <div className="p-2.5 rounded-xl bg-mintbg"><div className="text-[11px] text-mutedolive">กินได้ทั้งหมด</div><div className="font-num font-bold text-sm text-deepolive">{totalMeals} มื้อ</div></div>
+                <div className="flex justify-between items-center">
+                  <div className="font-bold text-sm text-deepolive">ผลคำนวณต้นทุนมื้ออาหาร</div>
+                  <div className="font-num font-bold text-sm text-charcoal">รวม {formatBaht(totalCost)}</div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-center">
+                  <div className="p-2.5 rounded-xl bg-mintbg"><div className="text-[11px] text-mutedolive">กินได้ทั้งหมด</div><div className="font-num font-bold text-sm text-deepolive">{formatCompact(totalMeals)} มื้อ</div></div>
                   <div className="p-2.5 rounded-xl bg-mintbg"><div className="text-[11px] text-mutedolive">กินได้นาน</div><div className="font-num font-bold text-sm text-deepolive">{formatCompact(days)} วัน</div></div>
                   <div className="p-2.5 rounded-xl bg-softorange"><div className="text-[11px] text-mutedolive">เฉลี่ยมื้อละ</div><div className="font-num font-bold text-sm text-vibrant">{formatBaht(costPerMeal)}</div></div>
+                  <div className="p-2.5 rounded-xl bg-mintbg"><div className="text-[11px] text-mutedolive">เฉลี่ยวันละ ({data.mealsPerDay} มื้อ)</div><div className="font-num font-bold text-sm text-deepolive">{formatBaht(costPerDay)}</div></div>
                 </div>
+                {totalMeals < 1 && (
+                  <div className="text-[11px] text-vibrant">* รายการนี้เป็นเศษ ({formatCompact(totalMeals)} มื้อ) บันทึกการ์ดไว้แล้วนำไปจับคู่ผสมในหน้ารายสัปดาห์ได้</div>
+                )}
                 <button
-                  onClick={() => { setPlanTitle(''); setShowSavePlanModal(true); }}
-                  className="w-full h-11 rounded-xl bg-vibrant text-white font-semibold text-sm"
+                  onClick={() => { setPlanTitle(''); setPlanDateIso(todayISO()); setShowSavePlanModal(true); }}
+                  className="w-full h-12 rounded-xl bg-vibrant text-white font-semibold text-sm"
                 >
-                  สรุปมื้ออาหาร (บันทึกการ์ด)
+                  สรุปมื้ออาหาร ({formatCompact(totalMeals)} มื้อ · บันทึกการ์ด)
                 </button>
               </div>
             </>
@@ -2074,29 +2144,56 @@
           {data.mealPlans.length > 0 && (
             <div className="space-y-2.5 pt-2">
               <div className="font-bold text-sm text-deepolive">ประวัติการ์ดสรุปมื้ออาหาร ({data.mealPlans.length})</div>
-              {data.mealPlans.map((pl) => (
-                <div key={pl.id} className="bg-white rounded-2xl p-4 border border-deepolive/40">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2"><MueLaLogo size={22} /><span className="font-bold text-sm">{pl.title}</span></div>
-                    <button onClick={() => updateData((p) => ({ ...p, mealPlans: p.mealPlans.filter((x) => x.id !== pl.id) }))} className="text-vibrant p-1"><Icon name="trash" className="w-4 h-4" /></button>
-                  </div>
-                  <div className="my-2.5 dashed-divider" />
-                  {pl.ingredients.map((ing) => (
-                    <div key={ing.id} className="flex justify-between text-xs py-0.5">
-                      <span>• {ing.name}</span>
-                      <span className="font-num text-mutedolive">{formatBaht(ing.cost)}</span>
+              {data.mealPlans.map((pl) => {
+                const plDailyCost = (pl.costPerMeal || 0) * Math.max(1, pl.mealsPerDay || data.mealsPerDay);
+                const plDateStr = formatThaiDate(pl.dateIso || todayISO());
+                return (
+                  <div key={pl.id} className="bg-white rounded-2xl p-4 border border-deepolive/40">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <MueLaLogo size={24} />
+                        <div className="min-w-0">
+                          <div className="font-bold text-sm truncate">{pl.title}</div>
+                          <div className="text-[11px] font-semibold text-deepolive">สรุปวันที่ {plDateStr} · ได้ {formatCompact(pl.totalMeals)} มื้อ</div>
+                        </div>
+                      </div>
+                      <button onClick={() => updateData((p) => ({ ...p, mealPlans: p.mealPlans.filter((x) => x.id !== pl.id) }))} className="text-vibrant p-1.5"><Icon name="trash" className="w-4 h-4" /></button>
                     </div>
-                  ))}
-                  <div className="my-2.5 dashed-divider" />
-                  <div className="flex justify-between items-center">
-                    <div className="text-xs text-mutedolive">รวม {formatBaht(pl.totalCost)} · {pl.totalMeals} มื้อ · อยู่ได้ {formatCompact(pl.estimatedDays)} วัน</div>
-                    <div className="px-2.5 py-1 rounded-lg bg-softorange text-right">
-                      <div className="text-[10px] text-mutedolive">เฉลี่ยมื้อละ</div>
-                      <div className="font-num font-bold text-sm text-vibrant">{formatBaht(pl.costPerMeal)}</div>
+                    <div className="my-2.5 dashed-divider" />
+                    {pl.ingredients.map((ing) => {
+                      const isFrac = (ing.estimatedMeals || 1) < 1;
+                      const ingPerMeal = isFrac ? ing.cost : ing.cost / Math.max(0.1, ing.estimatedMeals || 1);
+                      return (
+                        <div key={ing.id} className="py-0.5">
+                          <div className="flex justify-between items-center text-xs gap-2">
+                            <div className="flex items-center gap-1.5 min-w-0">
+                              <span className="truncate">• {ing.name}</span>
+                              <span className={`px-1.5 py-0.5 rounded text-[10px] shrink-0 ${isFrac ? 'bg-softorange text-vibrant font-medium' : 'bg-softolive text-deepolive'}`}>
+                                {isFrac ? `เศษ ${formatCompact(ing.estimatedMeals)} มื้อ` : `${formatCompact(ing.estimatedMeals)} มื้อ · ${formatBaht(ingPerMeal)}/มื้อ`}
+                              </span>
+                            </div>
+                            <span className="font-num text-mutedolive shrink-0">{formatBaht(ing.cost)}</span>
+                          </div>
+                          {isFrac && ing.fractionNote && (
+                            <div className="text-[11px] text-vibrant pl-3 pt-0.5">รายละเอียดเศษ: {ing.fractionNote}</div>
+                          )}
+                        </div>
+                      );
+                    })}
+                    <div className="my-2.5 dashed-divider" />
+                    <div className="flex justify-between items-center gap-2">
+                      <div className="text-xs">
+                        <div className="font-semibold text-charcoal">รวมต้นทุน {formatBaht(pl.totalCost)} · {formatCompact(pl.totalMeals)} มื้อ</div>
+                        <div className="text-deepolive">อยู่ได้ {formatCompact(pl.estimatedDays)} วัน · ตกวันละ {formatBaht(plDailyCost)}</div>
+                      </div>
+                      <div className="px-2.5 py-1 rounded-lg bg-softorange text-right shrink-0">
+                        <div className="text-[10px] text-mutedolive">เฉลี่ยมื้อละ</div>
+                        <div className="font-num font-bold text-sm text-vibrant">{formatBaht(pl.costPerMeal)}</div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 
@@ -2114,7 +2211,8 @@
                         id: uuid(),
                         name: it.name,
                         cost: Math.round(it.quantity * it.unitPrice * ratio * 100) / 100,
-                        estimatedMeals: 2,
+                        estimatedMeals: 1,
+                        fractionNote: '',
                         source: r.storeName
                       }));
                       setWorking((prev) => [...prev, ...imported]);
@@ -2134,9 +2232,23 @@
           {showManualModal && (
             <ManualIngredientModal
               onClose={() => setShowManualModal(false)}
-              onAdd={(name, cost, meals) => {
-                setWorking((prev) => [...prev, { id: uuid(), name, cost, estimatedMeals: meals, source: 'เพิ่มเอง' }]);
+              onAdd={(name, cost, meals, fractionNote) => {
+                setWorking((prev) => [...prev, { id: uuid(), name, cost, estimatedMeals: meals, fractionNote: meals < 1 ? (fractionNote || '') : '', source: 'เพิ่มเอง' }]);
                 setShowManualModal(false);
+              }}
+            />
+          )}
+
+          {fractionModal && (
+            <MealFractionModal
+              title={fractionModal.title}
+              initialMeals={fractionModal.initial}
+              initialNote={fractionModal.initialNote || ''}
+              allowNote={fractionModal.allowNote !== false}
+              onClose={() => setFractionModal(null)}
+              onConfirm={(val, note) => {
+                fractionModal.onConfirm(val, note);
+                setFractionModal(null);
               }}
             />
           )}
@@ -2144,21 +2256,32 @@
           {showSavePlanModal && (
             <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
               <div className="bg-white rounded-2xl w-full max-w-xs p-5 border border-sageborder space-y-3">
-                <h3 className="font-bold text-base text-deepolive">บันทึกการ์ดสรุปมื้ออาหาร</h3>
-                <p className="text-xs text-mutedolive">ตั้งชื่อชุดอาหาร (หรือเว้นว่างเพื่อใช้วันที่ปัจจุบัน)</p>
+                <h3 className="font-bold text-base text-deepolive">บันทึกสรุปมื้ออาหาร</h3>
+                <div className="text-xs font-semibold text-deepolive">สรุปได้ {formatCompact(totalMeals)} มื้อ · ตกมื้อละ {formatBaht(costPerMeal)}</div>
+                <div>
+                  <label className="text-[11px] text-mutedolive block mb-1">สรุปวันที่</label>
+                  <input type="date" value={planDateIso} onChange={(e) => e.target.value && setPlanDateIso(e.target.value)} className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm font-num" />
+                </div>
                 <input
                   value={planTitle}
                   onChange={(e) => setPlanTitle(e.target.value)}
-                  placeholder={`สรุปมื้ออาหาร ${formatThaiDate(todayISO())}`}
+                  placeholder="ชื่อเมนู / ชุดอาหาร (เว้นว่างใช้ชื่อวัตถุดิบ)"
                   className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm"
                 />
                 <div className="flex justify-end gap-2 pt-1">
                   <button onClick={() => setShowSavePlanModal(false)} className="px-4 h-10 text-sm text-mutedolive">ยกเลิก</button>
                   <button
                     onClick={() => {
+                      const chosenDate = planDateIso || todayISO();
+                      const autoTitle = working.length === 1
+                        ? working[0].name
+                        : working.length <= 3
+                          ? working.map((i) => i.name).join(' + ')
+                          : `ชุดอาหาร ${working.length} อย่าง (${formatThaiDate(chosenDate)})`;
                       const plan = {
                         id: uuid(),
-                        title: planTitle.trim() || `สรุปมื้ออาหาร ${formatThaiDate(todayISO())}`,
+                        dateIso: chosenDate,
+                        title: planTitle.trim() || autoTitle,
                         mealsPerDay: data.mealsPerDay,
                         ingredients: working,
                         totalCost,
@@ -2169,7 +2292,7 @@
                       updateData((p) => ({ ...p, mealPlans: [plan, ...p.mealPlans] }));
                       setWorking([]);
                       setShowSavePlanModal(false);
-                      showToast('บันทึกการ์ดสรุปมื้ออาหารเรียบร้อย');
+                      showToast(`สรุปมื้ออาหารเรียบร้อย (มื้อละ ${formatBaht(costPerMeal)})`);
                     }}
                     className="px-4 h-10 rounded-xl bg-vibrant text-white text-sm font-semibold"
                   >
@@ -2183,20 +2306,157 @@
       );
     }
 
+    function MealFractionModal({ title, initialMeals, initialNote = '', allowNote = true, onClose, onConfirm }) {
+      const [val, setVal] = useState(String(initialMeals));
+      const [note, setNote] = useState(initialNote);
+      const [error, setError] = useState('');
+      const presets = allowNote ? [0.25, 0.5, 0.75, 1, 2, 3, 4, 5] : [1, 2, 3, 4, 5, 6];
+      const parsed = parseDecimalInput(val);
+      const isFrac = allowNote && !isNaN(parsed) && parsed >= 0.1 && parsed < 1;
+
+      return (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-xs p-5 border border-sageborder space-y-3">
+            <h3 className="font-bold text-base text-deepolive">{title}</h3>
+            <p className="text-xs text-mutedolive">
+              {allowNote ? 'เลือกสัดส่วนเศษ (< 1 มื้อ) หรือจำนวนมื้อเต็ม (หากเป็นเศษต้องพิมพ์รายละเอียด)' : 'เลือกหรือกรอกจำนวนมื้อรวมทั้งหมด'}
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {presets.map((p) => {
+                const active = Math.abs((parsed || 0) - p) < 0.001;
+                return (
+                  <button key={p} onClick={() => { setVal(String(p)); setError(''); }} className={`px-2.5 py-1 rounded-full text-xs border ${active ? 'bg-olive text-white border-olive' : 'border-sageborder bg-mintbg text-charcoal'}`}>
+                    {formatCompact(p)} มื้อ
+                  </button>
+                );
+              })}
+            </div>
+            <input type="text" inputMode="decimal" value={val} onChange={(e) => { setVal(e.target.value); setError(''); }} placeholder="เช่น 0.5 หรือ 1, 2, 3" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm font-num" />
+            {isFrac && (
+              <div className="p-2.5 rounded-xl bg-softorange/60 border border-vibrant/30 space-y-1.5">
+                <label className="text-[11px] font-semibold text-vibrant block">รายละเอียดเศษ (&lt; 1 มื้อ) *</label>
+                <textarea
+                  rows={2}
+                  value={note}
+                  onChange={(e) => { setNote(e.target.value); setError(''); }}
+                  placeholder="เช่น เหลือครึ่งถุง เอาไปผัดผสมกับปลาหมึก"
+                  className="w-full p-2 rounded-lg border border-vibrant/40 bg-white text-xs resize-none"
+                />
+              </div>
+            )}
+            {error && <div className="text-[11px] text-vibrant font-medium">{error}</div>}
+            <div className="flex justify-end gap-2">
+              <button onClick={onClose} className="px-4 h-10 text-sm text-mutedolive">ยกเลิก</button>
+              <button
+                onClick={() => {
+                  const minRequired = allowNote ? 0.1 : 1;
+                  if (isNaN(parsed) || parsed < minRequired) {
+                    setError(allowNote ? 'กรุณากรอกจำนวนมื้อตั้งแต่ 0.1 ขึ้นไป' : 'กรุณากรอกจำนวนมื้อตั้งแต่ 1 ขึ้นไป');
+                    return;
+                  }
+                  if (isFrac && !note.trim()) {
+                    setError('กรุณาพิมพ์รายละเอียดเมื่อตั้งเป็นเศษไม่ถึง 1 มื้อ');
+                    return;
+                  }
+                  onConfirm(Math.round(parsed * 100) / 100, isFrac ? note.trim() : '');
+                }}
+                className="px-4 h-10 rounded-xl bg-olive text-white text-sm font-semibold"
+              >
+                ตกลง
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     function ManualIngredientModal({ onClose, onAdd }) {
       const [name, setName] = useState('');
       const [cost, setCost] = useState('');
-      const [meals, setMeals] = useState('2');
+      const [isFraction, setIsFraction] = useState(false);
+      const [wholeMeals, setWholeMeals] = useState(1);
+      const [fracMeals, setFracMeals] = useState('0.5');
+      const [fractionNote, setFractionNote] = useState('');
+      const [error, setError] = useState('');
+      const fracPresets = [0.25, 0.5, 0.75];
+
       return (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl w-full max-w-xs p-5 border border-sageborder space-y-3">
             <h3 className="font-bold text-base text-deepolive">เพิ่มวัตถุดิบด้วยตัวเอง</h3>
-            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="ชื่อวัตถุดิบ" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm" />
-            <input type="number" inputMode="decimal" value={cost} onChange={(e) => setCost(e.target.value)} placeholder="ราคา / ต้นทุน (บาท)" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm font-num" />
-            <input type="number" inputMode="numeric" value={meals} onChange={(e) => setMeals(e.target.value)} placeholder="จำนวนมื้อที่แบ่งกินได้" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm font-num" />
+            <input value={name} onChange={(e) => { setName(e.target.value); setError(''); }} placeholder="ชื่อวัตถุดิบ (เช่น หมูสับ, ปลาหมึก)" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm" />
+            <input type="text" inputMode="decimal" value={cost} onChange={(e) => setCost(e.target.value)} placeholder="ราคา / ต้นทุน (บาท)" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm font-num" />
+
+            <div className="grid grid-cols-2 gap-1.5">
+              <button
+                type="button"
+                onClick={() => { setIsFraction(false); setError(''); }}
+                className={`py-2 px-2 rounded-xl text-[11px] font-semibold border ${!isFraction ? 'bg-olive text-white border-olive' : 'bg-mintbg text-deepolive border-sageborder'}`}
+              >
+                เต็มมื้อ (เพิ่มทีละ 1)
+              </button>
+              <button
+                type="button"
+                onClick={() => { setIsFraction(true); setError(''); }}
+                className={`py-2 px-2 rounded-xl text-[11px] font-semibold border ${isFraction ? 'bg-vibrant text-white border-vibrant' : 'bg-mintbg text-deepolive border-sageborder'}`}
+              >
+                เป็นเศษ (&lt; 1 มื้อ)
+              </button>
+            </div>
+
+            {!isFraction ? (
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-mintbg border border-sageborder">
+                <span className="text-xs text-deepolive font-medium">จำนวนมื้อ</span>
+                <div className="flex items-center gap-2">
+                  <button type="button" onClick={() => setWholeMeals((m) => Math.max(1, m - 1))} className="w-9 h-9 rounded-full bg-white border border-sageborder flex items-center justify-center"><Icon name="minus" className="w-3.5 h-3.5" /></button>
+                  <span className="font-num font-bold text-sm min-w-[52px] text-center">{wholeMeals} มื้อ</span>
+                  <button type="button" onClick={() => setWholeMeals((m) => m + 1)} className="w-9 h-9 rounded-full bg-softolive text-deepolive flex items-center justify-center"><Icon name="plus" className="w-3.5 h-3.5" /></button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2 p-2.5 rounded-xl bg-softorange/60 border border-vibrant/30">
+                <div className="text-[11px] font-semibold text-vibrant">เลือกสัดส่วนเศษ (&lt; 1 มื้อ)</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {fracPresets.map((p) => {
+                    const active = Math.abs((parseDecimalInput(fracMeals) || 0) - p) < 0.001;
+                    return (
+                      <button key={p} type="button" onClick={() => setFracMeals(String(p))} className={`px-2.5 py-1 rounded-full text-[11px] border ${active ? 'bg-vibrant text-white border-vibrant' : 'border-sageborder bg-white'}`}>
+                        {formatCompact(p)} มื้อ
+                      </button>
+                    );
+                  })}
+                </div>
+                <input type="text" inputMode="decimal" value={fracMeals} onChange={(e) => { setFracMeals(e.target.value); setError(''); }} placeholder="สัดส่วนมื้อ เช่น 0.5" className="w-full h-9 px-3 rounded-lg border border-sageborder bg-white text-xs font-num" />
+                <textarea
+                  rows={2}
+                  value={fractionNote}
+                  onChange={(e) => { setFractionNote(e.target.value); setError(''); }}
+                  placeholder="รายละเอียดเศษ * เช่น เอาไปผัดผสมกับปลาหมึก"
+                  className="w-full p-2 rounded-lg border border-vibrant/40 bg-white text-xs resize-none"
+                />
+              </div>
+            )}
+
+            {error && <div className="text-[11px] text-vibrant font-medium">{error}</div>}
             <div className="flex justify-end gap-2">
               <button onClick={onClose} className="px-4 h-10 text-sm text-mutedolive">ยกเลิก</button>
-              <button onClick={() => { if (name.trim()) onAdd(name.trim(), Math.max(0, parseFloat(cost) || 0), Math.max(1, parseInt(meals) || 1)); }} className="px-4 h-10 rounded-xl bg-olive text-white text-sm font-semibold">เพิ่ม</button>
+              <button
+                onClick={() => {
+                  if (!name.trim()) { setError('กรุณากรอกชื่อวัตถุดิบ'); return; }
+                  const c = Math.max(0, parseDecimalInput(cost) || 0);
+                  if (isFraction) {
+                    const f = parseDecimalInput(fracMeals);
+                    if (isNaN(f) || f < 0.1 || f >= 1) { setError('เศษต้องมากกว่า 0 และน้อยกว่า 1 มื้อ'); return; }
+                    if (!fractionNote.trim()) { setError('กรุณาพิมพ์รายละเอียดเมื่อเป็นเศษไม่ถึง 1 มื้อ'); return; }
+                    onAdd(name.trim(), c, Math.round(f * 100) / 100, fractionNote.trim());
+                  } else {
+                    onAdd(name.trim(), c, wholeMeals, '');
+                  }
+                }}
+                className="px-4 h-10 rounded-xl bg-olive text-white text-sm font-semibold"
+              >
+                เพิ่ม
+              </button>
             </div>
           </div>
         </div>
@@ -2212,11 +2472,19 @@
       const today = todayISO();
       const days = data.weeklyDays;
       const todayRec = days.find((d) => d.dateIso === today);
-      const todayTotal = todayRec ? (todayRec.meal1.cost + todayRec.meal2.cost + todayRec.snack.cost) : (days[0] ? days[0].meal1.cost + days[0].meal2.cost + days[0].snack.cost : 0);
+      const focusDay = todayRec || days[0];
+      const countLogged = (d) => d ? [d.meal1, d.meal2, d.snack].filter((m) => m.name || m.cost > 0).length : 0;
+      const dayCost = (d) => d ? (d.meal1.cost + d.meal2.cost + d.snack.cost) : 0;
 
-      const totalMeals = days.reduce((s, d) => s + [d.meal1, d.meal2, d.snack].filter((m) => m.name || m.cost > 0).length, 0);
-      const weekTotal = days.reduce((s, d) => s + d.meal1.cost + d.meal2.cost + d.snack.cost, 0);
+      const todayTotal = dayCost(focusDay);
+      const todayMealsCount = countLogged(focusDay);
+      const todayAvgMeal = todayMealsCount > 0 ? todayTotal / todayMealsCount : 0;
+
+      const totalMeals = days.reduce((s, d) => s + countLogged(d), 0);
+      const activeDaysCount = days.filter((d) => countLogged(d) > 0).length;
+      const weekTotal = days.reduce((s, d) => s + dayCost(d), 0);
       const avgMeal = totalMeals > 0 ? weekTotal / totalMeals : 0;
+      const avgPerActiveDay = activeDaysCount > 0 ? weekTotal / activeDaysCount : 0;
 
       return (
         <div>
@@ -2227,7 +2495,7 @@
 
           {subTab === 'ACTIVE' ? (
             <div className="px-4 pt-3 space-y-3">
-              <div className="bg-white rounded-2xl p-4 border border-sageborder space-y-3">
+              <div className="bg-white rounded-2xl p-4 border border-sageborder space-y-2.5">
                 <div className="flex items-center justify-between gap-2">
                   <div>
                     <div className="font-semibold text-sm text-deepolive">สัปดาห์ 7 วัน</div>
@@ -2248,24 +2516,53 @@
                     className="h-10 px-2.5 rounded-xl border border-olive text-xs font-num text-deepolive"
                   />
                 </div>
+                <div className="grid grid-cols-2 gap-2 text-center">
+                  <div className="p-2.5 rounded-xl bg-mintbg">
+                    <div className="text-[10.5px] text-mutedolive">{todayRec ? `วันนี้ (${todayMealsCount} มื้อ)` : `วันแรก (${todayMealsCount} มื้อ)`}</div>
+                    <div className="font-num font-bold text-sm text-deepolive">{formatBaht(todayTotal)}</div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-mintbg">
+                    <div className="text-[10.5px] text-mutedolive">{todayRec ? 'วันนี้เฉลี่ยมื้อละ' : 'เฉลี่ยมื้อละวันแรก'}</div>
+                    <div className="font-num font-bold text-sm text-deepolive">{formatBaht(todayAvgMeal)}</div>
+                  </div>
+                </div>
                 <div className="grid grid-cols-3 gap-2 text-center">
-                  <div className="p-2.5 rounded-xl bg-mintbg"><div className="text-[10.5px] text-mutedolive">{todayRec ? 'วันนี้กินไป' : 'วันแรก'}</div><div className="font-num font-bold text-sm text-deepolive">{formatBaht(todayTotal)}</div></div>
-                  <div className="p-2.5 rounded-xl bg-mintbg"><div className="text-[10.5px] text-mutedolive">เฉลี่ยมื้อละ</div><div className="font-num font-bold text-sm text-deepolive">{formatBaht(avgMeal)}</div></div>
-                  <div className="p-2.5 rounded-xl bg-softorange"><div className="text-[10.5px] text-mutedolive">สะสมสัปดาห์</div><div className="font-num font-bold text-sm text-vibrant">{formatBaht(weekTotal)}</div></div>
+                  <div className="p-2.5 rounded-xl bg-mintbg">
+                    <div className="text-[10.5px] text-mutedolive truncate">ตกวันละ ({activeDaysCount} วัน)</div>
+                    <div className="font-num font-bold text-xs text-deepolive">{formatBaht(avgPerActiveDay)}</div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-mintbg">
+                    <div className="text-[10.5px] text-mutedolive truncate">เฉลี่ยมื้อละ ({totalMeals} มื้อ)</div>
+                    <div className="font-num font-bold text-xs text-deepolive">{formatBaht(avgMeal)}</div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-softorange">
+                    <div className="text-[10.5px] text-mutedolive">สะสมสัปดาห์</div>
+                    <div className="font-num font-bold text-xs text-vibrant">{formatBaht(weekTotal)}</div>
+                  </div>
                 </div>
               </div>
 
               {days.map((d) => {
-                const daySum = d.meal1.cost + d.meal2.cost + d.snack.cost;
+                const daySum = dayCost(d);
+                const dayMeals = countLogged(d);
+                const dayAvg = dayMeals > 0 ? daySum / dayMeals : 0;
                 const isToday = d.dateIso === today;
                 return (
                   <div key={d.dayIndex} className={`bg-white rounded-2xl p-3.5 border ${isToday ? 'border-olive' : 'border-sageborder'}`}>
-                    <div className="flex justify-between items-center mb-2">
-                      <div className="flex items-center gap-1.5">
-                        <span className={`font-bold text-sm ${isToday ? 'text-deepolive' : 'text-charcoal'}`}>{formatThaiDayDate(d.dateIso)}</span>
-                        {isToday && <span className="px-1.5 py-0.5 rounded bg-softolive text-deepolive text-[10px] font-semibold">วันนี้</span>}
+                    <div className="flex justify-between items-center mb-2 gap-2">
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <span className={`font-bold text-sm ${isToday ? 'text-deepolive' : 'text-charcoal'}`}>{formatThaiDayDate(d.dateIso)}</span>
+                          {isToday && <span className="px-1.5 py-0.5 rounded bg-softolive text-deepolive text-[10px] font-semibold">วันนี้</span>}
+                        </div>
+                        <div className={`text-[11px] ${dayMeals > 0 ? 'text-deepolive' : 'text-mutedolive'}`}>
+                          {dayMeals > 0 ? `${dayMeals} มื้อ · เฉลี่ยมื้อละ ${formatBaht(dayAvg)}` : 'กดช่องด้านล่างเพื่อเลือกเมนูที่กิน'}
+                        </div>
                       </div>
-                      <span className={`font-num font-bold text-sm ${daySum > 0 ? 'text-vibrant' : 'text-mutedolive'}`}>{formatBaht(daySum)}</span>
+                      <div className="text-right">
+                        <div className={`font-num font-bold text-sm ${daySum > 0 ? 'text-vibrant' : 'text-mutedolive'}`}>{formatBaht(daySum)}</div>
+                        {daySum > 0 && <div className="text-[10px] text-mutedolive">ต่อวัน</div>}
+                      </div>
                     </div>
                     <div className="grid grid-cols-3 gap-2">
                       {[
@@ -2278,15 +2575,15 @@
                           <button
                             key={slot.key}
                             onClick={() => setSlotTarget({ dayIndex: d.dayIndex, dateIso: d.dateIso, slotKey: slot.key, slotLabel: slot.label, entry: slot.entry })}
-                            className={`h-[70px] p-2 rounded-xl border text-left flex flex-col justify-between ${
+                            className={`h-[78px] p-2 rounded-xl border text-left flex flex-col justify-between ${
                               logged ? 'bg-softolive border-olive/60' : 'bg-mintbg border-sageborder'
                             }`}
                           >
                             <span className="text-[10px] text-mutedolive">{slot.label}</span>
                             {logged ? (
                               <div>
-                                <div className="text-[11px] font-semibold truncate">{slot.entry.name || 'มื้ออาหาร'}</div>
-                                <div className="font-num font-bold text-xs text-deepolive">{formatBaht(slot.entry.cost)}</div>
+                                <div className="text-[11px] leading-tight font-semibold line-clamp-2">{slot.entry.name || 'มื้ออาหาร'}</div>
+                                <div className="font-num font-bold text-xs text-deepolive mt-0.5">{formatBaht(slot.entry.cost)}</div>
                               </div>
                             ) : (
                               <span className="text-xs text-olive font-medium">+ บันทึก</span>
@@ -2357,77 +2654,256 @@
             />
           )}
 
-          {historyDetail && (
-            <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
-              <div className="bg-white rounded-3xl w-full max-w-md max-h-[85dvh] overflow-y-auto p-5 border border-sageborder">
-                <div className="flex justify-between items-center mb-2">
-                  <div className="flex items-center gap-2"><MueLaLogo size={24} /><h3 className="font-bold text-base text-deepolive">สรุปการกินรายสัปดาห์</h3></div>
-                  <button onClick={() => setHistoryDetail(null)}><Icon name="close" className="w-5 h-5" /></button>
-                </div>
-                <div className="text-xs text-mutedolive">{formatThaiDate(historyDetail.weekStartIso)} - {formatThaiDate(historyDetail.weekEndIso)}</div>
-                <div className="my-3 dashed-divider" />
-                <div className="space-y-2">
-                  {historyDetail.days.map((d) => {
-                    const sum = d.meal1.cost + d.meal2.cost + d.snack.cost;
-                    const txt = [d.meal1, d.meal2, d.snack].filter((m) => m.name || m.cost > 0).map((m) => `${m.name} (${formatBaht(m.cost)})`).join(' · ');
-                    return (
-                      <div key={d.dayIndex} className="flex justify-between items-start text-xs">
-                        <div><div className="font-semibold">{formatThaiDayDate(d.dateIso)}</div><div className="text-mutedolive">{txt || 'ไม่มีรายการ'}</div></div>
-                        <span className="font-num font-semibold text-deepolive">{formatBaht(sum)}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="my-3 dashed-divider" />
-                <div className="px-3.5 py-2.5 rounded-xl bg-softorange flex justify-between items-center">
-                  <span className="font-bold text-sm">ยอดรวมทั้งสัปดาห์ ({historyDetail.totalMeals} มื้อ)</span>
-                  <span className="font-num font-bold text-lg text-vibrant">{formatBaht(historyDetail.totalSpent)}</span>
+          {historyDetail && (() => {
+            const hActiveDays = Math.max(1, historyDetail.days.filter((d) => d.meal1.name || d.meal1.cost > 0 || d.meal2.name || d.meal2.cost > 0 || d.snack.name || d.snack.cost > 0).length);
+            const hAvgDay = historyDetail.totalSpent / hActiveDays;
+            return (
+              <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+                <div className="bg-white rounded-3xl w-full max-w-md max-h-[85dvh] overflow-y-auto p-5 border border-sageborder">
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="flex items-center gap-2"><MueLaLogo size={24} /><h3 className="font-bold text-base text-deepolive">สรุปการกินรายสัปดาห์</h3></div>
+                    <button onClick={() => setHistoryDetail(null)}><Icon name="close" className="w-5 h-5" /></button>
+                  </div>
+                  <div className="text-xs text-mutedolive">{formatThaiDate(historyDetail.weekStartIso)} - {formatThaiDate(historyDetail.weekEndIso)}</div>
+                  <div className="my-3 dashed-divider" />
+                  <div className="space-y-2">
+                    {historyDetail.days.map((d) => {
+                      const sum = d.meal1.cost + d.meal2.cost + d.snack.cost;
+                      const txt = [d.meal1, d.meal2, d.snack].filter((m) => m.name || m.cost > 0).map((m) => `${m.name} (${formatBaht(m.cost)})`).join(' · ');
+                      return (
+                        <div key={d.dayIndex} className="flex justify-between items-start text-xs">
+                          <div><div className="font-semibold">{formatThaiDayDate(d.dateIso)}</div><div className="text-mutedolive">{txt || 'ไม่มีรายการ'}</div></div>
+                          <span className="font-num font-semibold text-deepolive">{formatBaht(sum)}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="my-3 dashed-divider" />
+                  <div className="space-y-1 text-xs mb-2.5">
+                    <div className="flex justify-between"><span className="text-mutedolive">เฉลี่ยตกวันละ ({hActiveDays} วัน)</span><span className="font-num font-semibold">{formatBaht(hAvgDay)}</span></div>
+                    <div className="flex justify-between"><span className="text-mutedolive">เฉลี่ยมื้อละ</span><span className="font-num font-semibold">{formatBaht(historyDetail.avgCostPerMeal)}</span></div>
+                  </div>
+                  <div className="px-3.5 py-2.5 rounded-xl bg-softorange flex justify-between items-center">
+                    <span className="font-bold text-sm">ยอดรวมทั้งสัปดาห์ ({historyDetail.totalMeals} มื้อ)</span>
+                    <span className="font-num font-bold text-lg text-vibrant">{formatBaht(historyDetail.totalSpent)}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
         </div>
       );
     }
 
     function LogSlotModal({ target, mealPlans, onClose, onSave }) {
-      const [mode, setMode] = useState(mealPlans.length > 0 && !target.entry.name ? 'PLAN' : 'CUSTOM');
-      const [name, setName] = useState(target.entry.name || '');
-      const [cost, setCost] = useState(target.entry.cost > 0 ? String(target.entry.cost) : '');
+      const [showCustom, setShowCustom] = useState(false);
+      const [selectedSummaryDateIso, setSelectedSummaryDateIso] = useState(null);
+      const [selectedPicks, setSelectedPicks] = useState([]);
+      const [customName, setCustomName] = useState(target.entry.name || '');
+      const [customCost, setCustomCost] = useState(target.entry.cost > 0 ? String(target.entry.cost) : '');
+
+      const groupsByDate = {};
+      mealPlans.forEach((pl) => {
+        const dIso = pl.dateIso || todayISO();
+        if (!groupsByDate[dIso]) {
+          groupsByDate[dIso] = {
+            dateIso: dIso,
+            dayLabel: formatThaiDayDate(dIso),
+            dateLabel: formatThaiDate(dIso),
+            planCount: 0,
+            options: []
+          };
+        }
+        groupsByDate[dIso].planCount += 1;
+        const ings = pl.ingredients || [];
+        if (ings.length <= 1) {
+          const onlyIng = ings[0];
+          const displayName = onlyIng ? onlyIng.name : pl.title;
+          const isFrac = (pl.totalMeals || 1) < 1;
+          const unitCost = isFrac ? Math.round((pl.totalCost || 0) * 100) / 100 : Math.round((pl.costPerMeal || 0) * 100) / 100;
+          const fracNoteTxt = isFrac && onlyIng && onlyIng.fractionNote ? ` · เศษ: ${onlyIng.fractionNote}` : '';
+          groupsByDate[dIso].options.push({
+            pickKey: `plan_${pl.id}`,
+            dateIso: dIso,
+            name: displayName,
+            costPerMeal: unitCost,
+            subtitle: isFrac
+              ? `เศษ ${formatCompact(pl.totalMeals)} มื้อ${fracNoteTxt}`
+              : `${formatCompact(pl.totalMeals)} มื้อ (รวม ${formatBaht(pl.totalCost)})`,
+            isFrac
+          });
+        } else {
+          groupsByDate[dIso].options.push({
+            pickKey: `plan_${pl.id}`,
+            dateIso: dIso,
+            name: pl.title,
+            costPerMeal: Math.round((pl.costPerMeal || 0) * 100) / 100,
+            subtitle: `ทั้งชุด ${pl.title} (${formatCompact(pl.totalMeals)} มื้อ)`,
+            isFrac: (pl.totalMeals || 1) < 1
+          });
+          ings.forEach((ing) => {
+            const isFrac = (ing.estimatedMeals || 1) < 1;
+            const rawPerMeal = isFrac ? ing.cost : ing.cost / Math.max(1, ing.estimatedMeals || 1);
+            const fracNoteTxt = isFrac && ing.fractionNote ? ` (${ing.fractionNote})` : '';
+            groupsByDate[dIso].options.push({
+              pickKey: `ing_${pl.id}_${ing.id}`,
+              dateIso: dIso,
+              name: ing.name,
+              costPerMeal: Math.round(rawPerMeal * 100) / 100,
+              subtitle: isFrac
+                ? `เศษ ${formatCompact(ing.estimatedMeals)} มื้อ${fracNoteTxt} · จาก ${pl.title}`
+                : `แบ่ง ${formatCompact(ing.estimatedMeals)} มื้อ · จาก ${pl.title}`,
+              isFrac
+            });
+          });
+        }
+      });
+
+      const groupedByDate = Object.values(groupsByDate).sort((a, b) => b.dateIso.localeCompare(a.dateIso));
+      const activeGroup = selectedSummaryDateIso ? groupedByDate.find((g) => g.dateIso === selectedSummaryDateIso) || null : null;
+
+      const togglePick = (item) => {
+        const exists = selectedPicks.some((x) => x.pickKey === item.pickKey);
+        setSelectedPicks((prev) => exists ? prev.filter((x) => x.pickKey !== item.pickKey) : [...prev, item]);
+      };
+
+      const composedName = selectedPicks.map((x) => x.name).join(' + ');
+      const composedCost = Math.round(selectedPicks.reduce((s, x) => s + x.costPerMeal, 0) * 100) / 100;
+      const wasLogged = Boolean(target.entry.name || target.entry.cost > 0);
 
       return (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl w-full max-w-sm p-5 border border-sageborder space-y-3">
-            <div className="flex justify-between items-center">
-              <h3 className="font-bold text-base text-deepolive">{target.slotLabel} · {formatThaiDayDate(target.dateIso)}</h3>
+          <div className="bg-white rounded-3xl w-full max-w-sm p-5 border border-sageborder space-y-3 max-h-[88dvh] overflow-y-auto">
+            <div className="flex justify-between items-start gap-2">
+              <div>
+                <h3 className="font-bold text-base text-deepolive">{target.slotLabel} · {formatThaiDayDate(target.dateIso)}</h3>
+                <p className="text-[11px] text-mutedolive">
+                  {showCustom
+                    ? 'กรอกเมนูที่ซื้อกินเองนอกรายการคำนวณมื้อ'
+                    : activeGroup
+                      ? `ขั้นตอน 2/2: เลือกรายการของวันที่ ${activeGroup.dayLabel}`
+                      : 'ขั้นตอน 1/2: เลือกวันที่คำนวณมื้อก่อน แล้วค่อยเลือกรายการ'}
+                </p>
+              </div>
               <button onClick={onClose}><Icon name="close" className="w-5 h-5" /></button>
             </div>
-            <div className="flex gap-2">
-              <button onClick={() => setMode('PLAN')} className={`px-3 py-1.5 rounded-full text-xs border ${mode === 'PLAN' ? 'bg-olive text-white border-olive' : 'border-sageborder'}`}>ดึงจาก Meal Note</button>
-              <button onClick={() => setMode('CUSTOM')} className={`px-3 py-1.5 rounded-full text-xs border ${mode === 'CUSTOM' ? 'bg-olive text-white border-olive' : 'border-sageborder'}`}>กรอกเอง</button>
-            </div>
-            {mode === 'PLAN' ? (
-              <div className="max-h-56 overflow-y-auto space-y-2">
-                {mealPlans.length === 0 ? <div className="text-xs text-mutedolive">ยังไม่มีการ์ดสรุปจาก Meal Note — เลือก "กรอกเอง" ได้ทันที</div> : mealPlans.map((pl) => (
-                  <div
-                    key={pl.id}
-                    onClick={() => onSave({ name: pl.title, cost: Math.round(pl.costPerMeal * 100) / 100 })}
-                    className="p-3 rounded-xl bg-mintbg border border-sageborder flex justify-between items-center cursor-pointer"
-                  >
-                    <div><div className="font-semibold text-sm">{pl.title}</div><div className="text-[11px] text-mutedolive">{pl.totalMeals} มื้อ</div></div>
-                    <span className="font-num font-bold text-xs text-vibrant">{formatBaht(pl.costPerMeal)}/มื้อ</span>
-                  </div>
-                ))}
+
+            {wasLogged && selectedPicks.length === 0 && !showCustom && (
+              <div className="px-3 py-2 rounded-xl bg-mintbg border border-sageborder flex justify-between items-center text-xs">
+                <span className="truncate flex-1 pr-2">ที่บันทึกไว้: {target.entry.name}</span>
+                <span className="font-num font-bold text-deepolive shrink-0">{formatBaht(target.entry.cost)}</span>
               </div>
+            )}
+
+            {!showCustom ? (
+              <>
+                {selectedPicks.length > 0 && (
+                  <div className="p-2.5 rounded-xl bg-softolive border border-olive/40 space-y-1.5">
+                    <div className="flex flex-wrap gap-1.5">
+                      {selectedPicks.map((p) => (
+                        <button key={p.pickKey} onClick={() => togglePick(p)} className="px-2 py-1 rounded-lg bg-white border border-olive text-[11px] font-medium flex items-center gap-1">
+                          <span>{p.name} ({formatBaht(p.costPerMeal)})</span>
+                          <span className="text-vibrant font-bold">×</span>
+                        </button>
+                      ))}
+                    </div>
+                    <div className="flex justify-between items-center text-xs font-semibold">
+                      <span className="text-deepolive truncate flex-1 pr-2">กินมื้อนี้: {composedName}</span>
+                      <span className="font-num text-vibrant shrink-0">{formatBaht(composedCost)}</span>
+                    </div>
+                  </div>
+                )}
+
+                {activeGroup && (
+                  <button
+                    onClick={() => setSelectedSummaryDateIso(null)}
+                    className="w-full px-3 py-2 rounded-xl bg-softolive border border-olive/40 text-left text-xs font-semibold text-deepolive flex items-center justify-between"
+                  >
+                    <span>← เปลี่ยนวันที่ (กำลังดู: {activeGroup.dayLabel})</span>
+                    <span className="text-[11px] text-mutedolive">{activeGroup.options.length} รายการ</span>
+                  </button>
+                )}
+
+                <div className="max-h-60 overflow-y-auto space-y-2">
+                  {groupedByDate.length === 0 ? (
+                    <div className="p-3.5 rounded-xl bg-mintbg border border-sageborder text-xs text-mutedolive">
+                      ยังไม่มีการ์ดสรุปจากหน้า "คำนวณมื้อ" — ไปคำนวณและสรุปการ์ดในหน้า Meal Note ก่อน แล้วมากดเลือกที่นี่ได้เลย
+                    </div>
+                  ) : !activeGroup ? (
+                    groupedByDate.map((g) => {
+                      const pickedInDate = selectedPicks.filter((x) => x.dateIso === g.dateIso).length;
+                      return (
+                        <button
+                          key={g.dateIso}
+                          onClick={() => setSelectedSummaryDateIso(g.dateIso)}
+                          className="w-full p-3.5 rounded-xl border border-sageborder bg-mintbg flex justify-between items-center gap-2 text-left hover:border-olive"
+                        >
+                          <div className="min-w-0">
+                            <div className="font-bold text-xs text-deepolive">สรุปวันที่ {g.dayLabel}</div>
+                            <div className="text-[11px] text-mutedolive">{g.planCount} การ์ด · {g.options.length} รายการให้เลือก</div>
+                          </div>
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {pickedInDate > 0 && (
+                              <span className="px-2 py-0.5 rounded-full bg-olive text-white text-[10px] font-semibold">เลือก {pickedInDate}</span>
+                            )}
+                            <span className="text-sm text-deepolive font-bold">›</span>
+                          </div>
+                        </button>
+                      );
+                    })
+                  ) : activeGroup.options.map((opt) => {
+                    const checked = selectedPicks.some((x) => x.pickKey === opt.pickKey);
+                    return (
+                      <div
+                        key={opt.pickKey}
+                        onClick={() => togglePick(opt)}
+                        className={`p-3 rounded-xl border flex justify-between items-center gap-2 cursor-pointer ${checked ? 'bg-softolive border-olive' : 'bg-mintbg border-sageborder'}`}
+                      >
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                          <span className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 ${checked ? 'bg-olive border-olive text-white' : 'border-mutedolive bg-white'}`}>
+                            {checked && <Icon name="check" className="w-3 h-3" />}
+                          </span>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-semibold text-xs truncate">{opt.name}</span>
+                              {opt.isFrac && <span className="px-1.5 py-0.5 rounded bg-softorange text-vibrant text-[10px]">เศษ</span>}
+                            </div>
+                            <div className="text-[10.5px] text-mutedolive line-clamp-2">{opt.subtitle}</div>
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <div className="font-num font-bold text-xs text-vibrant">{formatBaht(opt.costPerMeal)}</div>
+                          <div className="text-[10px] text-mutedolive">{opt.isFrac ? 'ต่อเศษ' : 'ต่อมื้อ'}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="flex gap-2 pt-1">
+                  {wasLogged && (
+                    <button onClick={() => onSave({ name: '', cost: 0 })} className="flex-1 h-11 rounded-xl border border-vibrant text-vibrant text-xs font-medium">ล้างช่อง</button>
+                  )}
+                  <button
+                    disabled={selectedPicks.length === 0}
+                    onClick={() => onSave({ name: composedName, cost: composedCost })}
+                    className={`flex-[1.6] h-11 rounded-xl text-white text-xs font-semibold ${selectedPicks.length > 0 ? 'bg-olive' : 'bg-mutedolive/40 cursor-not-allowed'}`}
+                  >
+                    {selectedPicks.length > 0 ? `บันทึก (${formatBaht(composedCost)})` : 'เลือกรายการด้านบน'}
+                  </button>
+                </div>
+
+                <div className="text-center">
+                  <button onClick={() => setShowCustom(true)} className="text-[11px] text-mutedolive underline">กินอาหารนอกรายการ? กรอกชื่อเมนูเอง</button>
+                </div>
+              </>
             ) : (
               <div className="space-y-2.5">
-                <input value={name} onChange={(e) => setName(e.target.value)} placeholder="ชื่อเมนูอาหาร" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm" />
-                <input type="number" step="0.01" inputMode="decimal" value={cost} onChange={(e) => setCost(e.target.value)} placeholder="ราคา (บาท)" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm font-num" />
+                <input value={customName} onChange={(e) => setCustomName(e.target.value)} placeholder="ชื่อเมนูอาหาร" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm" />
+                <input type="text" inputMode="decimal" value={customCost} onChange={(e) => setCustomCost(e.target.value)} placeholder="ราคา (บาท)" className="w-full h-10 px-3 rounded-xl border border-sageborder text-sm font-num" />
                 <div className="flex gap-2">
-                  {(target.entry.name || target.entry.cost > 0) && (
-                    <button onClick={() => onSave({ name: '', cost: 0 })} className="flex-1 h-10 rounded-xl border border-vibrant text-vibrant text-xs font-medium">ล้างช่อง</button>
-                  )}
-                  <button onClick={() => onSave({ name: name.trim() || target.slotLabel, cost: Math.max(0, parseFloat(cost) || 0) })} className="flex-[1.5] h-10 rounded-xl bg-olive text-white text-xs font-semibold">บันทึกมื้อนี้</button>
+                  <button onClick={() => setShowCustom(false)} className="flex-1 h-11 rounded-xl border border-sageborder text-deepolive text-xs font-medium">กลับไปเลือก</button>
+                  <button onClick={() => onSave({ name: customName.trim() || target.slotLabel, cost: Math.max(0, parseDecimalInput(customCost) || 0) })} className="flex-[1.4] h-11 rounded-xl bg-olive text-white text-xs font-semibold">บันทึก</button>
                 </div>
               </div>
             )}
